@@ -1542,7 +1542,7 @@ var _this$child0 = new $core.Request($this)
 	AppApiPrototype.constructor = AppApiComponent
 
 	AppApiPrototype.componentName = 'src.AppApi'
-	core.addProperty(AppApiPrototype, 'string', 'apiKey', (""))
+	core.addProperty(AppApiPrototype, 'string', 'apiKey', ("a20b12b279f744f2b3c7b5c5400c4eb5"))
 
 	AppApiPrototype.$c = function($c) {
 		var $this = this;
@@ -1558,8 +1558,8 @@ var _this$child0 = new $controls$web$api.Method($this)
 	AppApiPrototype.$s = function($c) {
 		var $this = this;
 	AppApiBasePrototype.$s.call(this, $c.$b); delete $c.$b
-//assigning baseUrl to ("")
-			$this._removeUpdater('baseUrl'); $this.baseUrl = ("");
+//assigning baseUrl to ("https://api.start.ru")
+			$this._removeUpdater('baseUrl'); $this.baseUrl = ("https://api.start.ru");
 
 //setting up component Method
 			var _this$child0 = $c._this$child0
