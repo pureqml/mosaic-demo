@@ -4,6 +4,6 @@ Rest {
 
 	Method {
 		name: "getMain";
-		path: "/web/main?apikey=" + parent.apikey;
+		path: "/web/main?apikey=" + parent.apiKey;
 	}
 }
