@@ -1566,8 +1566,8 @@ var _this$child0 = new $controls$web$api.Method($this)
 			_this$child0.$s($c.$c$_this$child0)
 			delete $c.$c$_this$child0
 
-//assigning path to ("/web/main?apikey=" + ${parent.apikey})
-			_this$child0._replaceUpdater('path', function() { _this$child0.path = ("/web/main?apikey=" + _this$child0.parent.apikey) }, [_this$child0.parent,'apikey'])
+//assigning path to ("/web/main?apikey=" + ${parent.apiKey})
+			_this$child0._replaceUpdater('path', function() { _this$child0.path = ("/web/main?apikey=" + _this$child0.parent.apiKey) }, [_this$child0.parent,'apiKey'])
 //assigning name to ("getMain")
 			_this$child0._removeUpdater('name'); _this$child0.name = ("getMain");
 
