@@ -57,10 +57,10 @@ Activity {
 
 					if (row.thumbnail.image_15x)
 					result.push({
-						video: "https://api.start.ru" + row.video_cover,
-						preview: "https://start.ru" + row.thumbnail.image_15x,
+						video: api.baseUrl + row.video_cover,
+						preview: api.baseUrl + row.thumbnail.image_15x,
 						title: row.title,
-						icon: "https://start.ru" + row.logotype.image_15x
+						icon: api.baseUrl + row.logotype.image_15x
 					})
 				}
 				nowonTvGrid.model.assign(result)

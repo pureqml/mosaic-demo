@@ -6,7 +6,7 @@ ActivityManager {
 	height: context.system.resolutionHeight;
 	clip: true;
 
-	StartApi { id: api; }
+	AppApi { id: api; }
 
 	//@using { src.MosaicPage }
 	LazyActivity { name: "mosaic"; component: "src.MosaicPage"; }
