@@ -1,5 +1,5 @@
 Rest {
-	property string baseUrl: "https://api.start.ru";
+	property string baseUrl: "";
 
 	Method {
 		name: "getMain";
