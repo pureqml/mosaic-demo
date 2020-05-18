@@ -3459,7 +3459,8 @@ $this.completed()
 	core.addProperty(UiAppPrototype, 'int', 'contextWidth')
 	core.addProperty(UiAppPrototype, 'int', 'contextHeight')
 	UiAppPrototype.__complete = function() { UiAppBasePrototype.__complete.call(this)
-this.push("mosaic")
+this._context.document.dom.body.style.backgroundColor = "#424242"
+		this.push("mosaic")
 }
 
 	UiAppPrototype.$c = function($c) {
@@ -3491,16 +3492,14 @@ var _this$child0 = new $src.AppApi($this)
 	UiAppPrototype.$s = function($c) {
 		var $this = this;
 	UiAppBasePrototype.$s.call(this, $c.$b); delete $c.$b
-//assigning clip to (true)
-			$this._removeUpdater('clip'); $this.clip = (true);
-//assigning height to (${context.system.resolutionHeight})
-			$this._replaceUpdater('height', function() { $this.height = ($this._context.system.resolutionHeight) }, [$this._context.system,'resolutionHeight'])
-//assigning width to (${context.system.resolutionWidth})
-			$this._replaceUpdater('width', function() { $this.width = ($this._context.system.resolutionWidth) }, [$this._context.system,'resolutionWidth'])
 //assigning contextHeight to (${context.height})
 			$this._replaceUpdater('contextHeight', function() { $this.contextHeight = ($this._context.height) }, [$this._context,'height'])
 //assigning contextWidth to (${context.width})
 			$this._replaceUpdater('contextWidth', function() { $this.contextWidth = ($this._context.width) }, [$this._context,'width'])
+//assigning clip to (true)
+			$this._removeUpdater('clip'); $this.clip = (true);
+//assigning anchors.fill to (${context})
+			$this.anchors._replaceUpdater('fill', function() { $this.anchors.fill = ($this._context) }, [$this,'context'])
 
 //setting up component AppApi
 			var _this$child0 = $c._this$child0
@@ -4957,10 +4956,10 @@ $this.delegate = (function(__parent, __row) {
 			delegate._removeUpdater('color'); delegate.color = ("#464646");
 //assigning effects.shadow.blur to (10)
 			delegate.effects.shadow._removeUpdater('blur'); delegate.effects.shadow.blur = (10);
-//assigning height to (((170) * ${context.virtualScale}))
-			delegate._replaceUpdater('height', function() { delegate.height = (((170) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale'])
-//assigning width to (((290) * ${context.virtualScale}))
-			delegate._replaceUpdater('width', function() { delegate.width = (((290) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale'])
+//assigning height to (${parent.cellHeight} - ((10) * ${context.virtualScale}))
+			delegate._replaceUpdater('height', function() { delegate.height = (delegate.parent.cellHeight - ((10) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale',delegate.parent,'cellHeight'])
+//assigning width to (${parent.cellWidth} - ((10) * ${context.virtualScale}))
+			delegate._replaceUpdater('width', function() { delegate.width = (delegate.parent.cellWidth - ((10) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale',delegate.parent,'cellWidth'])
 //assigning effects.shadow.color to (${activeFocus} ? "#00f" : "#0000")
 			delegate.effects.shadow._replaceUpdater('color', function() { delegate.effects.shadow.color = (delegate.activeFocus ? "#00f" : "#0000") }, [delegate,'activeFocus'])
 //assigning effects.shadow.spread to (1)
@@ -5184,8 +5183,8 @@ $this.delegate = (function(__parent, __row) {
 	MosaicPrototype.$s = function($c) {
 		var $this = this;
 	MosaicBasePrototype.$s.call(this, $c.$b); delete $c.$b
-//assigning cellWidth to (((300) * ${context.virtualScale}))
-			$this._replaceUpdater('cellWidth', function() { $this.cellWidth = (((300) * $this._context.virtualScale)) }, [$this._context,'virtualScale'])
+//assigning cellWidth to (${width} * 0.25)
+			$this._replaceUpdater('cellWidth', function() { $this.cellWidth = ($this.width * 0.25) }, [$this,'width'])
 //assigning keyNavigationWraps to (false)
 			$this._removeUpdater('keyNavigationWraps'); $this.keyNavigationWraps = (false);
 //assigning height to ((${parent.height}))
@@ -5202,8 +5201,8 @@ $this.delegate = (function(__parent, __row) {
 
 
 			_this$model.completed()
-//assigning cellHeight to (((180) * ${context.virtualScale}))
-			$this._replaceUpdater('cellHeight', function() { $this.cellHeight = (((180) * $this._context.virtualScale)) }, [$this._context,'virtualScale'])
+//assigning cellHeight to (${cellWidth} * 0.625)
+			$this._replaceUpdater('cellHeight', function() { $this.cellHeight = ($this.cellWidth * 0.625) }, [$this,'cellWidth'])
 
 			$this.completed()
 }
@@ -5628,27 +5627,20 @@ $this.completed()
 	MosaicPagePrototype.$c = function($c) {
 		var $this = this;
 		MosaicPageBasePrototype.$c.call(this, $c.$b = { })
-var _this$child0 = new $core.Rectangle($this)
+var _this$child0 = new $controls$experimental.Mosaic($this)
 		$c._this$child0 = _this$child0
 
-//creating component Rectangle
+//creating component Mosaic
 		_this$child0.$c($c.$c$_this$child0 = { })
-
+		_this$child0._setId('mosaicGrid')
 		$this.addChild(_this$child0)
-		var _this$child1 = new $controls$experimental.Mosaic($this)
+		var _this$child1 = new $controls$experimental.NestedVideo($this)
 		$c._this$child1 = _this$child1
 
-//creating component Mosaic
-		_this$child1.$c($c.$c$_this$child1 = { })
-		_this$child1._setId('mosaicGrid')
-		$this.addChild(_this$child1)
-		var _this$child2 = new $controls$experimental.NestedVideo($this)
-		$c._this$child2 = _this$child2
-
 //creating component NestedVideo
-		_this$child2.$c($c.$c$_this$child2 = { })
-		_this$child2._setId('embedVideo')
-		$this.addChild(_this$child2)
+		_this$child1.$c($c.$c$_this$child1 = { })
+		_this$child1._setId('embedVideo')
+		$this.addChild(_this$child1)
 	}
 	MosaicPagePrototype.$s = function($c) {
 		var $this = this;
@@ -5658,143 +5650,131 @@ var _this$child0 = new $core.Rectangle($this)
 //assigning anchors.fill to (${parent})
 			$this.anchors._removeUpdater('fill'); $this.anchors.fill = ($this.parent);
 
-//setting up component Rectangle
+//setting up component Mosaic
 			var _this$child0 = $c._this$child0
 			_this$child0.$s($c.$c$_this$child0)
 			delete $c.$c$_this$child0
 
-//assigning color to ("#000c")
-			_this$child0._removeUpdater('color'); _this$child0.color = ("#000c");
-//assigning anchors.fill to (${parent})
-			_this$child0.anchors._removeUpdater('fill'); _this$child0.anchors.fill = (_this$child0.parent);
-
-			_this$child0.completed()
-
-//setting up component Mosaic
-			var _this$child1 = $c._this$child1
-			_this$child1.$s($c.$c$_this$child1)
-			delete $c.$c$_this$child1
-
 //assigning keyProcessDelay to (300)
-			_this$child1._removeUpdater('keyProcessDelay'); _this$child1.keyProcessDelay = (300);
-//assigning height to (${parent.height} - ${y})
-			_this$child1._replaceUpdater('height', function() { _this$child1.height = (_this$child1.parent.height - _this$child1.y) }, [_this$child1,'y',_this$child1.parent,'height'])
-//assigning width to (((1200) * ${context.virtualScale}))
-			_this$child1._replaceUpdater('width', function() { _this$child1.width = (((1200) * _this$child1._context.virtualScale)) }, [_this$child1._context,'virtualScale'])
+			_this$child0._removeUpdater('keyProcessDelay'); _this$child0.keyProcessDelay = (300);
+//assigning height to (((95) / 100 * ${parent.height}))
+			_this$child0._replaceUpdater('height', function() { _this$child0.height = (((95) / 100 * _this$child0.parent.height)) }, [_this$child0.parent,'height'])
+//assigning width to (((90) / 100 * ${parent.width}))
+			_this$child0._replaceUpdater('width', function() { _this$child0.width = (((90) / 100 * _this$child0.parent.width)) }, [_this$child0.parent,'width'])
 //assigning animationDuration to (300)
-			_this$child1._removeUpdater('animationDuration'); _this$child1.animationDuration = (300);
-//assigning y to (((40) * ${context.virtualScale}))
-			_this$child1._replaceUpdater('y', function() { _this$child1.y = (((40) * _this$child1._context.virtualScale)) }, [_this$child1._context,'virtualScale'])
-//assigning x to (((40) * ${context.virtualScale}))
-			_this$child1._replaceUpdater('x', function() { _this$child1.x = (((40) * _this$child1._context.virtualScale)) }, [_this$child1._context,'virtualScale'])
-			_this$child1.focusIndex = function(idx) {
+			_this$child0._removeUpdater('animationDuration'); _this$child0.animationDuration = (300);
+//assigning y to (((5) / 100 * ${parent.height}))
+			_this$child0._replaceUpdater('y', function() { _this$child0.y = (((5) / 100 * _this$child0.parent.height)) }, [_this$child0.parent,'height'])
+//assigning x to (((5) / 100 * ${parent.width}))
+			_this$child0._replaceUpdater('x', function() { _this$child0.x = (((5) / 100 * _this$child0.parent.width)) }, [_this$child0.parent,'width'])
+			_this$child0.focusIndex = function(idx) {
 	var mosaicGrid = this._get('mosaicGrid', true), embedVideo = this._get('embedVideo', true)
 
 			var row = this.model.get(idx)
 			var item = this.getItemPosition(idx)
 			var x = mosaicGrid.x + item[0] - mosaicGrid.contentX
 			var y = mosaicGrid.y + item[1] - mosaicGrid.contentY
-			embedVideo.width = 290
-			embedVideo.height = 170
+			embedVideo.width = mosaicGrid.cellWidth
+			embedVideo.height = mosaicGrid.cellHeight
 			embedVideo.showPlayerAt(x, y)
 			embedVideo.source = row.video
-		}.bind(_this$child1)
-			_this$child1.on('play', function(idx) {
+		}.bind(_this$child0)
+			_this$child0.on('play', function(idx) {
 	var root = this._get('root', true), embedVideo = this._get('embedVideo', true)
 
 			embedVideo.x = 0
 			embedVideo.y = 0
 			embedVideo.width = root.width
 			embedVideo.height = root.height
-		}.bind(_this$child1))
-			_this$child1.on('itemFocused', function(idx) { this.focusIndex(idx) }.bind(_this$child1))
-			_this$child1.onChanged('currentIndex', function(value) {
+		}.bind(_this$child0))
+			_this$child0.on('itemFocused', function(idx) { this.focusIndex(idx) }.bind(_this$child0))
+			_this$child0.onChanged('currentIndex', function(value) {
 	var embedVideo = this._get('embedVideo', true)
- embedVideo.hide() }.bind(_this$child1))
-			_this$child1.onPressed('Back', function(key,event) { this.focusIndex(this.currentIndex) }.bind(_this$child1))
+ embedVideo.hide() }.bind(_this$child0))
+			_this$child0.onPressed('Back', function(key,event) { this.focusIndex(this.currentIndex) }.bind(_this$child0))
 
-			_this$child1.completed()
+			_this$child0.completed()
 
 //setting up component NestedVideo
-			var _this$child2 = $c._this$child2
-			_this$child2.$s($c.$c$_this$child2)
-			delete $c.$c$_this$child2
+			var _this$child1 = $c._this$child1
+			_this$child1.$s($c.$c$_this$child1)
+			delete $c.$c$_this$child1
 
 //assigning loop to (true)
-			_this$child2._removeUpdater('loop'); _this$child2.loop = (true);
-	var behavior__this_child2_on_y = new $core.Animation(_this$child2)
-	var behavior__this_child2_on_y$c = { behavior__this_child2_on_y: behavior__this_child2_on_y }
+			_this$child1._removeUpdater('loop'); _this$child1.loop = (true);
+	var behavior__this_child1_on_y = new $core.Animation(_this$child1)
+	var behavior__this_child1_on_y$c = { behavior__this_child1_on_y: behavior__this_child1_on_y }
 
 //creating component Animation
-	behavior__this_child2_on_y.$c(behavior__this_child2_on_y$c.$c$behavior__this_child2_on_y = { })
+	behavior__this_child1_on_y.$c(behavior__this_child1_on_y$c.$c$behavior__this_child1_on_y = { })
 
 
 //setting up component Animation
-	var behavior__this_child2_on_y = behavior__this_child2_on_y$c.behavior__this_child2_on_y
-	behavior__this_child2_on_y.$s(behavior__this_child2_on_y$c.$c$behavior__this_child2_on_y)
-	delete behavior__this_child2_on_y$c.$c$behavior__this_child2_on_y
+	var behavior__this_child1_on_y = behavior__this_child1_on_y$c.behavior__this_child1_on_y
+	behavior__this_child1_on_y.$s(behavior__this_child1_on_y$c.$c$behavior__this_child1_on_y)
+	delete behavior__this_child1_on_y$c.$c$behavior__this_child1_on_y
 
 //assigning duration to (300)
-	behavior__this_child2_on_y._removeUpdater('duration'); behavior__this_child2_on_y.duration = (300);
+	behavior__this_child1_on_y._removeUpdater('duration'); behavior__this_child1_on_y.duration = (300);
 
-	behavior__this_child2_on_y.completed()
-	_this$child2.setAnimation('y', behavior__this_child2_on_y);
+	behavior__this_child1_on_y.completed()
+	_this$child1.setAnimation('y', behavior__this_child1_on_y);
 
-	var behavior__this_child2_on_x = new $core.Animation(_this$child2)
-	var behavior__this_child2_on_x$c = { behavior__this_child2_on_x: behavior__this_child2_on_x }
+	var behavior__this_child1_on_x = new $core.Animation(_this$child1)
+	var behavior__this_child1_on_x$c = { behavior__this_child1_on_x: behavior__this_child1_on_x }
 
 //creating component Animation
-	behavior__this_child2_on_x.$c(behavior__this_child2_on_x$c.$c$behavior__this_child2_on_x = { })
+	behavior__this_child1_on_x.$c(behavior__this_child1_on_x$c.$c$behavior__this_child1_on_x = { })
 
 
 //setting up component Animation
-	var behavior__this_child2_on_x = behavior__this_child2_on_x$c.behavior__this_child2_on_x
-	behavior__this_child2_on_x.$s(behavior__this_child2_on_x$c.$c$behavior__this_child2_on_x)
-	delete behavior__this_child2_on_x$c.$c$behavior__this_child2_on_x
+	var behavior__this_child1_on_x = behavior__this_child1_on_x$c.behavior__this_child1_on_x
+	behavior__this_child1_on_x.$s(behavior__this_child1_on_x$c.$c$behavior__this_child1_on_x)
+	delete behavior__this_child1_on_x$c.$c$behavior__this_child1_on_x
 
 //assigning duration to (300)
-	behavior__this_child2_on_x._removeUpdater('duration'); behavior__this_child2_on_x.duration = (300);
+	behavior__this_child1_on_x._removeUpdater('duration'); behavior__this_child1_on_x.duration = (300);
 
-	behavior__this_child2_on_x.completed()
-	_this$child2.setAnimation('x', behavior__this_child2_on_x);
+	behavior__this_child1_on_x.completed()
+	_this$child1.setAnimation('x', behavior__this_child1_on_x);
 
-	var behavior__this_child2_on_height = new $core.Animation(_this$child2)
-	var behavior__this_child2_on_height$c = { behavior__this_child2_on_height: behavior__this_child2_on_height }
+	var behavior__this_child1_on_height = new $core.Animation(_this$child1)
+	var behavior__this_child1_on_height$c = { behavior__this_child1_on_height: behavior__this_child1_on_height }
 
 //creating component Animation
-	behavior__this_child2_on_height.$c(behavior__this_child2_on_height$c.$c$behavior__this_child2_on_height = { })
+	behavior__this_child1_on_height.$c(behavior__this_child1_on_height$c.$c$behavior__this_child1_on_height = { })
 
 
 //setting up component Animation
-	var behavior__this_child2_on_height = behavior__this_child2_on_height$c.behavior__this_child2_on_height
-	behavior__this_child2_on_height.$s(behavior__this_child2_on_height$c.$c$behavior__this_child2_on_height)
-	delete behavior__this_child2_on_height$c.$c$behavior__this_child2_on_height
+	var behavior__this_child1_on_height = behavior__this_child1_on_height$c.behavior__this_child1_on_height
+	behavior__this_child1_on_height.$s(behavior__this_child1_on_height$c.$c$behavior__this_child1_on_height)
+	delete behavior__this_child1_on_height$c.$c$behavior__this_child1_on_height
 
 //assigning duration to (300)
-	behavior__this_child2_on_height._removeUpdater('duration'); behavior__this_child2_on_height.duration = (300);
+	behavior__this_child1_on_height._removeUpdater('duration'); behavior__this_child1_on_height.duration = (300);
 
-	behavior__this_child2_on_height.completed()
-	_this$child2.setAnimation('height', behavior__this_child2_on_height);
+	behavior__this_child1_on_height.completed()
+	_this$child1.setAnimation('height', behavior__this_child1_on_height);
 
-	var behavior__this_child2_on_width = new $core.Animation(_this$child2)
-	var behavior__this_child2_on_width$c = { behavior__this_child2_on_width: behavior__this_child2_on_width }
+	var behavior__this_child1_on_width = new $core.Animation(_this$child1)
+	var behavior__this_child1_on_width$c = { behavior__this_child1_on_width: behavior__this_child1_on_width }
 
 //creating component Animation
-	behavior__this_child2_on_width.$c(behavior__this_child2_on_width$c.$c$behavior__this_child2_on_width = { })
+	behavior__this_child1_on_width.$c(behavior__this_child1_on_width$c.$c$behavior__this_child1_on_width = { })
 
 
 //setting up component Animation
-	var behavior__this_child2_on_width = behavior__this_child2_on_width$c.behavior__this_child2_on_width
-	behavior__this_child2_on_width.$s(behavior__this_child2_on_width$c.$c$behavior__this_child2_on_width)
-	delete behavior__this_child2_on_width$c.$c$behavior__this_child2_on_width
+	var behavior__this_child1_on_width = behavior__this_child1_on_width$c.behavior__this_child1_on_width
+	behavior__this_child1_on_width.$s(behavior__this_child1_on_width$c.$c$behavior__this_child1_on_width)
+	delete behavior__this_child1_on_width$c.$c$behavior__this_child1_on_width
 
 //assigning duration to (300)
-	behavior__this_child2_on_width._removeUpdater('duration'); behavior__this_child2_on_width.duration = (300);
+	behavior__this_child1_on_width._removeUpdater('duration'); behavior__this_child1_on_width.duration = (300);
 
-	behavior__this_child2_on_width.completed()
-	_this$child2.setAnimation('width', behavior__this_child2_on_width);
+	behavior__this_child1_on_width.completed()
+	_this$child1.setAnimation('width', behavior__this_child1_on_width);
 
-			_this$child2.completed()
+			_this$child1.completed()
 
 			$this.completed()
 }
@@ -6277,148 +6257,6 @@ $this.completed()
 			$this._replaceUpdater('style', function() { $this.style = ($this.parent.style) }, [$this.parent,'style'])
 
 			$this.completed()
-}
-
-
-//=====[component core.Model]=====================
-
-	var ModelBaseComponent = $core.Object
-	var ModelBasePrototype = ModelBaseComponent.prototype
-
-/**
- * @constructor
- * @extends {$core.Object}
- */
-	var ModelComponent = $core.Model = function(parent, row) {
-		ModelBaseComponent.apply(this, arguments)
-
-	}
-	var ModelPrototype = ModelComponent.prototype = Object.create(ModelBasePrototype)
-
-	ModelPrototype.constructor = ModelComponent
-
-	ModelPrototype.componentName = 'core.Model'
-	ModelPrototype.reset = $core.createSignal('reset')
-	ModelPrototype.rowsChanged = $core.createSignal('rowsChanged')
-	ModelPrototype.rowsRemoved = $core.createSignal('rowsRemoved')
-	ModelPrototype.rowsInserted = $core.createSignal('rowsInserted')
-	core.addProperty(ModelPrototype, 'int', 'count')
-
-	ModelPrototype.$c = function($c) {
-		var $this = this;
-		ModelBasePrototype.$c.call(this, $c.$b = { })
-
-	}
-	ModelPrototype.$s = function($c) {
-		var $this = this;
-	ModelBasePrototype.$s.call(this, $c.$b); delete $c.$b
-$this.completed()
-}
-
-
-//=====[component core.ListModel]=====================
-
-	var ListModelBaseComponent = $core.Model
-	var ListModelBasePrototype = ListModelBaseComponent.prototype
-
-/**
- * @constructor
- * @extends {$core.Model}
- */
-	var ListModelComponent = $core.ListModel = function(parent, row) {
-		ListModelBaseComponent.apply(this, arguments)
-	//custom constructor:
-	{
-		this._rows = []
-	}
-
-	}
-	var ListModelPrototype = ListModelComponent.prototype = Object.create(ListModelBasePrototype)
-
-	ListModelPrototype.constructor = ListModelComponent
-
-	ListModelPrototype.componentName = 'core.ListModel'
-	core.addProperty(ListModelPrototype, 'array', 'data')
-	ListModelPrototype.clear = function() { this.assign([]) }
-	ListModelPrototype.forEach = function(callback) {
-		return this._rows.forEach(callback)
-	}
-	ListModelPrototype.addChild = function(child) {
-		this.append(child)
-	}
-	ListModelPrototype.get = function(idx) {
-		if (idx < 0 || idx >= this._rows.length)
-			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
-		var row = this._rows[idx]
-		if (!(row instanceof Object))
-			throw new Error('row is non-object')
-		row.index = idx
-		return row
-	}
-	ListModelPrototype.remove = function(idx,n) {
-		if (idx < 0 || idx >= this._rows.length)
-			throw new Error('index ' + idx + ' out of bounds')
-		if (n === undefined)
-			n = 1
-		this._rows.splice(idx, n)
-		this.count = this._rows.length
-		this.rowsRemoved(idx, idx + n)
-	}
-	ListModelPrototype.setProperty = function(idx,name,value) {
-		if (idx < 0 || idx >= this._rows.length)
-			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
-		var row = this._rows[idx]
-		if (!(row instanceof Object))
-			throw new Error('row is non-object, invalid index? (' + idx + ')')
-
-		if (row[name] !== value) {
-			row[name] = value
-			this.rowsChanged(idx, idx + 1)
-		}
-	}
-	ListModelPrototype.insert = function(idx,row) {
-		if (idx < 0 || idx > this._rows.length)
-			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
-		this._rows.splice(idx, 0, row)
-		this.count = this._rows.length
-		this.rowsInserted(idx, idx + 1)
-	}
-	ListModelPrototype.set = function(idx,row) {
-		if (idx < 0 || idx >= this._rows.length)
-			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
-		if (!(row instanceof Object))
-			throw new Error('row is non-object')
-		this._rows[idx] = row
-		this.rowsChanged(idx, idx + 1)
-	}
-	ListModelPrototype.append = function(row) {
-		var l = this._rows.length
-		if (Array.isArray(row)) {
-			Array.prototype.push.apply(this._rows, row)
-			this.count = this._rows.length
-			this.rowsInserted(l, l + row.length)
-		} else {
-			this._rows.push(row)
-			this.count = this._rows.length
-			this.rowsInserted(l, l + 1)
-		}
-	}
-	ListModelPrototype.assign = function(rows) {
-		this._rows = rows
-		this.count = this._rows.length
-		this.reset()
-	}
-	$core._protoOnChanged(ListModelPrototype, 'data', function(value) { this.assign(value) })
-
-	ListModelPrototype.$c = function($c) {
-		var $this = this;
-		ListModelBasePrototype.$c.call(this, $c.$b = { })
-
-	}
-	ListModelPrototype.$s = function($c) {
-		var $this = this;
-	ListModelBasePrototype.$s.call(this, $c.$b); delete $c.$b
-$this.completed()
 }
 
 
@@ -7008,65 +6846,144 @@ $this.completed()
 }
 
 
-//=====[component core.Rectangle]=====================
+//=====[component core.Model]=====================
 
-	var RectangleBaseComponent = $core.Item
-	var RectangleBasePrototype = RectangleBaseComponent.prototype
+	var ModelBaseComponent = $core.Object
+	var ModelBasePrototype = ModelBaseComponent.prototype
 
 /**
  * @constructor
- * @extends {$core.Item}
+ * @extends {$core.Object}
  */
-	var RectangleComponent = $core.Rectangle = function(parent, row) {
-		RectangleBaseComponent.apply(this, arguments)
+	var ModelComponent = $core.Model = function(parent, row) {
+		ModelBaseComponent.apply(this, arguments)
+
+	}
+	var ModelPrototype = ModelComponent.prototype = Object.create(ModelBasePrototype)
+
+	ModelPrototype.constructor = ModelComponent
+
+	ModelPrototype.componentName = 'core.Model'
+	ModelPrototype.reset = $core.createSignal('reset')
+	ModelPrototype.rowsChanged = $core.createSignal('rowsChanged')
+	ModelPrototype.rowsRemoved = $core.createSignal('rowsRemoved')
+	ModelPrototype.rowsInserted = $core.createSignal('rowsInserted')
+	core.addProperty(ModelPrototype, 'int', 'count')
+
+	ModelPrototype.$c = function($c) {
+		var $this = this;
+		ModelBasePrototype.$c.call(this, $c.$b = { })
+
+	}
+	ModelPrototype.$s = function($c) {
+		var $this = this;
+	ModelBasePrototype.$s.call(this, $c.$b); delete $c.$b
+$this.completed()
+}
+
+
+//=====[component core.ListModel]=====================
+
+	var ListModelBaseComponent = $core.Model
+	var ListModelBasePrototype = ListModelBaseComponent.prototype
+
+/**
+ * @constructor
+ * @extends {$core.Model}
+ */
+	var ListModelComponent = $core.ListModel = function(parent, row) {
+		ListModelBaseComponent.apply(this, arguments)
 	//custom constructor:
 	{
-		this._context.backend.initRectangle(this)
+		this._rows = []
 	}
 
 	}
-	var RectanglePrototype = RectangleComponent.prototype = Object.create(RectangleBasePrototype)
+	var ListModelPrototype = ListModelComponent.prototype = Object.create(ListModelBasePrototype)
 
-	{
-		var styleMap = RectanglePrototype._propertyToStyle = Object.create(RectangleBasePrototype._propertyToStyle)
-		styleMap['color'] = 'background-color'
+	ListModelPrototype.constructor = ListModelComponent
+
+	ListModelPrototype.componentName = 'core.ListModel'
+	core.addProperty(ListModelPrototype, 'array', 'data')
+	ListModelPrototype.clear = function() { this.assign([]) }
+	ListModelPrototype.forEach = function(callback) {
+		return this._rows.forEach(callback)
 	}
+	ListModelPrototype.addChild = function(child) {
+		this.append(child)
+	}
+	ListModelPrototype.get = function(idx) {
+		if (idx < 0 || idx >= this._rows.length)
+			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
+		var row = this._rows[idx]
+		if (!(row instanceof Object))
+			throw new Error('row is non-object')
+		row.index = idx
+		return row
+	}
+	ListModelPrototype.remove = function(idx,n) {
+		if (idx < 0 || idx >= this._rows.length)
+			throw new Error('index ' + idx + ' out of bounds')
+		if (n === undefined)
+			n = 1
+		this._rows.splice(idx, n)
+		this.count = this._rows.length
+		this.rowsRemoved(idx, idx + n)
+	}
+	ListModelPrototype.setProperty = function(idx,name,value) {
+		if (idx < 0 || idx >= this._rows.length)
+			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
+		var row = this._rows[idx]
+		if (!(row instanceof Object))
+			throw new Error('row is non-object, invalid index? (' + idx + ')')
 
-	RectanglePrototype.constructor = RectangleComponent
+		if (row[name] !== value) {
+			row[name] = value
+			this.rowsChanged(idx, idx + 1)
+		}
+	}
+	ListModelPrototype.insert = function(idx,row) {
+		if (idx < 0 || idx > this._rows.length)
+			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
+		this._rows.splice(idx, 0, row)
+		this.count = this._rows.length
+		this.rowsInserted(idx, idx + 1)
+	}
+	ListModelPrototype.set = function(idx,row) {
+		if (idx < 0 || idx >= this._rows.length)
+			throw new Error('index ' + idx + ' out of bounds (' + this._rows.length + ')')
+		if (!(row instanceof Object))
+			throw new Error('row is non-object')
+		this._rows[idx] = row
+		this.rowsChanged(idx, idx + 1)
+	}
+	ListModelPrototype.append = function(row) {
+		var l = this._rows.length
+		if (Array.isArray(row)) {
+			Array.prototype.push.apply(this._rows, row)
+			this.count = this._rows.length
+			this.rowsInserted(l, l + row.length)
+		} else {
+			this._rows.push(row)
+			this.count = this._rows.length
+			this.rowsInserted(l, l + 1)
+		}
+	}
+	ListModelPrototype.assign = function(rows) {
+		this._rows = rows
+		this.count = this._rows.length
+		this.reset()
+	}
+	$core._protoOnChanged(ListModelPrototype, 'data', function(value) { this.assign(value) })
 
-	RectanglePrototype.componentName = 'core.Rectangle'
-	core.addProperty(RectanglePrototype, 'color', 'color', ("#0000"))
-	core.addLazyProperty(RectanglePrototype, 'border', (function(__parent, __row) {
-		var lazy$border = new $core.Border(__parent, __row)
-		var $c = { lazy$border : lazy$border }
-
-//creating component Border
-			lazy$border.$c($c.$c$lazy$border = { })
-
-
-//setting up component Border
-			var lazy$border = $c.lazy$border
-			lazy$border.$s($c.$c$lazy$border)
-			delete $c.$c$lazy$border
-
-
-			lazy$border.completed()
-
-		return lazy$border
-}))
-	core.addProperty(RectanglePrototype, 'Gradient', 'gradient')
-	$core._protoOnChanged(RectanglePrototype, 'color', function(value) {
-		this.style('background-color', $core.Color.normalize(value))
-	})
-
-	RectanglePrototype.$c = function($c) {
+	ListModelPrototype.$c = function($c) {
 		var $this = this;
-		RectangleBasePrototype.$c.call(this, $c.$b = { })
+		ListModelBasePrototype.$c.call(this, $c.$b = { })
 
 	}
-	RectanglePrototype.$s = function($c) {
+	ListModelPrototype.$s = function($c) {
 		var $this = this;
-	RectangleBasePrototype.$s.call(this, $c.$b); delete $c.$b
+	ListModelBasePrototype.$s.call(this, $c.$b); delete $c.$b
 $this.completed()
 }
 
@@ -7165,6 +7082,69 @@ this._updateStyle()
 	GradientPrototype.$s = function($c) {
 		var $this = this;
 	GradientBasePrototype.$s.call(this, $c.$b); delete $c.$b
+$this.completed()
+}
+
+
+//=====[component core.Rectangle]=====================
+
+	var RectangleBaseComponent = $core.Item
+	var RectangleBasePrototype = RectangleBaseComponent.prototype
+
+/**
+ * @constructor
+ * @extends {$core.Item}
+ */
+	var RectangleComponent = $core.Rectangle = function(parent, row) {
+		RectangleBaseComponent.apply(this, arguments)
+	//custom constructor:
+	{
+		this._context.backend.initRectangle(this)
+	}
+
+	}
+	var RectanglePrototype = RectangleComponent.prototype = Object.create(RectangleBasePrototype)
+
+	{
+		var styleMap = RectanglePrototype._propertyToStyle = Object.create(RectangleBasePrototype._propertyToStyle)
+		styleMap['color'] = 'background-color'
+	}
+
+	RectanglePrototype.constructor = RectangleComponent
+
+	RectanglePrototype.componentName = 'core.Rectangle'
+	core.addProperty(RectanglePrototype, 'color', 'color', ("#0000"))
+	core.addLazyProperty(RectanglePrototype, 'border', (function(__parent, __row) {
+		var lazy$border = new $core.Border(__parent, __row)
+		var $c = { lazy$border : lazy$border }
+
+//creating component Border
+			lazy$border.$c($c.$c$lazy$border = { })
+
+
+//setting up component Border
+			var lazy$border = $c.lazy$border
+			lazy$border.$s($c.$c$lazy$border)
+			delete $c.$c$lazy$border
+
+
+			lazy$border.completed()
+
+		return lazy$border
+}))
+	core.addProperty(RectanglePrototype, 'Gradient', 'gradient')
+	$core._protoOnChanged(RectanglePrototype, 'color', function(value) {
+		this.style('background-color', $core.Color.normalize(value))
+	})
+
+	RectanglePrototype.$c = function($c) {
+		var $this = this;
+		RectangleBasePrototype.$c.call(this, $c.$b = { })
+
+	}
+	RectanglePrototype.$s = function($c) {
+		var $this = this;
+	RectangleBasePrototype.$s.call(this, $c.$b); delete $c.$b
 $this.completed()
 }
 
