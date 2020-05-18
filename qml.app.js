@@ -4857,6 +4857,7 @@ $this.completed()
 	MosaicPrototype.componentName = 'controls.experimental.Mosaic'
 	MosaicPrototype.play = $core.createSignal('play')
 	MosaicPrototype.itemFocused = $core.createSignal('itemFocused')
+	core.addProperty(MosaicPrototype, 'int', 'selectedIndex')
 	MosaicPrototype.fill = function(items,mappingFunc) {
 		var res = []
 		for (var i in items) {
@@ -4866,6 +4867,7 @@ $this.completed()
 		}
 		this.model.assign(res)
 	}
+	$core._protoOnChanged(MosaicPrototype, 'currentIndex', function(value) { this.selectedIndex = value })
 
 	MosaicPrototype.$c = function($c) {
 		var $this = this;
@@ -4877,6 +4879,7 @@ $this.delegate = (function(__parent, __row) {
 //creating component WebItem
 			delegate.$c($c.$c$delegate = { })
 			delegate.pressed = $core.createSignal('pressed').bind(delegate)
+	core.addProperty(delegate, 'bool', 'active')
 			var delegate$child0 = new $core.Image(delegate)
 			$c.delegate$child0 = delegate$child0
 
@@ -4960,21 +4963,23 @@ $this.delegate = (function(__parent, __row) {
 			delegate._replaceUpdater('height', function() { delegate.height = (delegate.parent.cellHeight - ((10) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale',delegate.parent,'cellHeight'])
 //assigning width to (${parent.cellWidth} - ((10) * ${context.virtualScale}))
 			delegate._replaceUpdater('width', function() { delegate.width = (delegate.parent.cellWidth - ((10) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale',delegate.parent,'cellWidth'])
-//assigning effects.shadow.color to (${activeFocus} ? "#00f" : "#0000")
-			delegate.effects.shadow._replaceUpdater('color', function() { delegate.effects.shadow.color = (delegate.activeFocus ? "#00f" : "#0000") }, [delegate,'activeFocus'])
+//assigning effects.shadow.color to (${active} ? "#00f" : "#0000")
+			delegate.effects.shadow._replaceUpdater('color', function() { delegate.effects.shadow.color = (delegate.active ? "#00f" : "#0000") }, [delegate,'active'])
+//assigning active to (${model.index} == ${parent.selectedIndex})
+			delegate._replaceUpdater('active', function() { delegate.active = (delegate._get('model').index == delegate.parent.selectedIndex) }, [delegate._get('_delegate'),'_rowIndex',delegate.parent,'selectedIndex'])
 //assigning effects.shadow.spread to (1)
 			delegate.effects.shadow._removeUpdater('spread'); delegate.effects.shadow.spread = (1);
-//assigning z to (${activeFocus} ? ${parent.z} + 1 : ${parent.z})
-			delegate._replaceUpdater('z', function() { delegate.z = (delegate.activeFocus ? delegate.parent.z + 1 : delegate.parent.z) }, [delegate.parent,'z',delegate,'activeFocus'])
-//assigning transform.scaleX to (${activeFocus} ? 1.1 : 1)
-			delegate.transform._replaceUpdater('scaleX', function() { delegate.transform.scaleX = (delegate.activeFocus ? 1.1 : 1) }, [delegate,'activeFocus'])
-//assigning transform.scaleY to (${activeFocus} ? 1.1 : 1)
-			delegate.transform._replaceUpdater('scaleY', function() { delegate.transform.scaleY = (delegate.activeFocus ? 1.1 : 1) }, [delegate,'activeFocus'])
+//assigning z to (${active} ? ${parent.z} + 1 : ${parent.z})
+			delegate._replaceUpdater('z', function() { delegate.z = (delegate.active ? delegate.parent.z + 1 : delegate.parent.z) }, [delegate.parent,'z',delegate,'active'])
+//assigning transform.scaleX to (${active} ? 1.1 : 1)
+			delegate.transform._replaceUpdater('scaleX', function() { delegate.transform.scaleX = (delegate.active ? 1.1 : 1) }, [delegate,'active'])
+//assigning transform.scaleY to (${active} ? 1.1 : 1)
+			delegate.transform._replaceUpdater('scaleY', function() { delegate.transform.scaleY = (delegate.active ? 1.1 : 1) }, [delegate,'active'])
 			delegate.on('pressed', function() {
 	var model = this._get('model', true)
  this.parent.play(model.index) }.bind(delegate))
 			delegate.on('clicked', function() { this.pressed() }.bind(delegate))
-			delegate.onChanged('activeFocus', function(value) {
+			delegate.onChanged('active', function(value) {
 	var flipTimer = this._get('flipTimer', true)
 
 			if (!value)
@@ -4982,6 +4987,9 @@ $this.delegate = (function(__parent, __row) {
 
 			flipTimer.restart()
 		}.bind(delegate))
+			delegate.onChanged('hover', function(value) {
+	var model = this._get('model', true)
+ if (value) this.parent.selectedIndex = model.index }.bind(delegate))
 			delegate.onPressed('Select', function(key,event) { this.pressed() }.bind(delegate))
 
 //setting up component Image
@@ -5688,7 +5696,7 @@ var _this$child0 = new $controls$experimental.Mosaic($this)
 			embedVideo.height = root.height
 		}.bind(_this$child0))
 			_this$child0.on('itemFocused', function(idx) { this.focusIndex(idx) }.bind(_this$child0))
-			_this$child0.onChanged('currentIndex', function(value) {
+			_this$child0.onChanged('selectedIndex', function(value) {
 	var embedVideo = this._get('embedVideo', true)
  embedVideo.hide() }.bind(_this$child0))
 			_this$child0.onPressed('Back', function(key,event) { this.focusIndex(this.currentIndex) }.bind(_this$child0))
