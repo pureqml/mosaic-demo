@@ -3472,13 +3472,20 @@ var _this$child0 = new $src.AppApi($this)
 		_this$child0.$c($c.$c$_this$child0 = { })
 		_this$child0._setId('api')
 		$this.addChild(_this$child0)
-		var _this$child1 = new $controls$core.LazyActivity($this)
+		var _this$child1 = new $src.AnotherApi($this)
 		$c._this$child1 = _this$child1
 
-//creating component LazyActivity
+//creating component AnotherApi
 		_this$child1.$c($c.$c$_this$child1 = { })
-
+		_this$child1._setId('anotherApi')
 		$this.addChild(_this$child1)
+		var _this$child2 = new $controls$core.LazyActivity($this)
+		$c._this$child2 = _this$child2
+
+//creating component LazyActivity
+		_this$child2.$c($c.$c$_this$child2 = { })
+
+		$this.addChild(_this$child2)
 		$this._setId('root')
 	}
 	UiAppPrototype.$s = function($c) {
@@ -3503,17 +3510,25 @@ var _this$child0 = new $src.AppApi($this)
 
 			_this$child0.completed()
 
-//setting up component LazyActivity
+//setting up component AnotherApi
 			var _this$child1 = $c._this$child1
 			_this$child1.$s($c.$c$_this$child1)
 			delete $c.$c$_this$child1
 
-//assigning component to ("src.MosaicPage")
-			_this$child1._removeUpdater('component'); _this$child1.component = ("src.MosaicPage");
-//assigning name to ("mosaic")
-			_this$child1._removeUpdater('name'); _this$child1.name = ("mosaic");
 
 			_this$child1.completed()
+
+//setting up component LazyActivity
+			var _this$child2 = $c._this$child2
+			_this$child2.$s($c.$c$_this$child2)
+			delete $c.$c$_this$child2
+
+//assigning component to ("src.MosaicPage")
+			_this$child2._removeUpdater('component'); _this$child2.component = ("src.MosaicPage");
+//assigning name to ("mosaic")
+			_this$child2._removeUpdater('name'); _this$child2.name = ("mosaic");
+
+			_this$child2.completed()
 
 			$this.completed()
 }
@@ -4843,6 +4858,15 @@ $this.completed()
 	MosaicPrototype.componentName = 'controls.experimental.Mosaic'
 	MosaicPrototype.play = $core.createSignal('play')
 	MosaicPrototype.itemFocused = $core.createSignal('itemFocused')
+	MosaicPrototype.fill = function(items,mappingFunc) {
+		var res = []
+		for (var i in items) {
+			var row = mappingFunc(items[i])
+			if (row)
+				res.push(row)
+		}
+		this.model.assign(res)
+	}
 
 	MosaicPrototype.$c = function($c) {
 		var $this = this;
@@ -5555,23 +5579,47 @@ $this.completed()
 
 	MosaicPagePrototype.componentName = 'src.MosaicPage'
 	MosaicPagePrototype.init = function() {
-	var api = this._get('api', true), nowonTvGrid = this._get('nowonTvGrid', true)
+	var anotherApi = this._get('anotherApi', true), mosaicGrid = this._get('mosaicGrid', true), api = this._get('api', true)
 
-		api.getMain(
+		// api.getMain(
+		// 	function(res) {
+		// 		mosaicGrid.fill(res[0].items, function(row) {
+		// 			if (row.thumbnail.image_15x) {
+		// 				return {
+		// 					video: api.baseUrl + row.video_cover,
+		// 					preview: api.baseUrl + row.thumbnail.image_15x,
+		// 					title: row.title,
+		// 					icon: api.baseUrl + row.logotype.image_15x
+		// 				}
+		// 			} else {
+		// 				return null
+		// 			}
+		// 		})
+		// 	},
+		// 	function(e) { log("Failed to get content", e) }
+		// )
+
+		anotherApi.getMain(
 			function(res) {
-				var result = []
-				for (var i in res[0].items) {
-					var row = res[0].items[i]
-
-					if (row.thumbnail.image_15x)
-					result.push({
-						video: api.baseUrl + row.video_cover,
-						preview: api.baseUrl + row.thumbnail.image_15x,
-						title: row.title,
-						icon: api.baseUrl + row.logotype.image_15x
-					})
-				}
-				nowonTvGrid.model.assign(result)
+				mosaicGrid.fill(res.element.collectionItems.items, function(row) {
+					if (row.element.basicCovers.items && row.element.basicCovers.items.length > 0) {
+						var videoUrl = ""
+						var trailers = row.element.trailers.items
+						for (var i in trailers) {
+							if (trailers[i].media.mimeType.indexOf("mp4") >= 0) {
+								videoUrl = trailers[i].url
+								break
+							}
+						}
+						return {
+							video: videoUrl,
+							preview: row.element.basicCovers.items[0].url,
+							title: row.element.name
+						}
+					} else {
+						return null
+					}
+				})
 			},
 			function(e) { log("Failed to get content", e) }
 		)
@@ -5592,7 +5640,7 @@ var _this$child0 = new $core.Rectangle($this)
 
 //creating component Mosaic
 		_this$child1.$c($c.$c$_this$child1 = { })
-		_this$child1._setId('nowonTvGrid')
+		_this$child1._setId('mosaicGrid')
 		$this.addChild(_this$child1)
 		var _this$child2 = new $controls$experimental.NestedVideo($this)
 		$c._this$child2 = _this$child2
@@ -5640,12 +5688,12 @@ var _this$child0 = new $core.Rectangle($this)
 //assigning x to (((40) * ${context.virtualScale}))
 			_this$child1._replaceUpdater('x', function() { _this$child1.x = (((40) * _this$child1._context.virtualScale)) }, [_this$child1._context,'virtualScale'])
 			_this$child1.focusIndex = function(idx) {
-	var embedVideo = this._get('embedVideo', true), nowonTvGrid = this._get('nowonTvGrid', true)
+	var mosaicGrid = this._get('mosaicGrid', true), embedVideo = this._get('embedVideo', true)
 
 			var row = this.model.get(idx)
 			var item = this.getItemPosition(idx)
-			var x = nowonTvGrid.x + item[0] - nowonTvGrid.contentX
-			var y = nowonTvGrid.y + item[1] - nowonTvGrid.contentY
+			var x = mosaicGrid.x + item[0] - mosaicGrid.contentX
+			var y = mosaicGrid.y + item[1] - mosaicGrid.contentY
 			embedVideo.width = 290
 			embedVideo.height = 170
 			embedVideo.showPlayerAt(x, y)
@@ -7176,6 +7224,58 @@ $this.completed()
 			_this$hoverMixin.completed()
 //assigning hoverMixin.cursor to ("pointer")
 			$this.hoverMixin._removeUpdater('cursor'); $this.hoverMixin.cursor = ("pointer");
+
+			$this.completed()
+}
+
+
+//=====[component src.AnotherApi]=====================
+
+	var AnotherApiBaseComponent = $controls$web$api.Rest
+	var AnotherApiBasePrototype = AnotherApiBaseComponent.prototype
+
+/**
+ * @constructor
+ * @extends {$controls$web$api.Rest}
+ */
+	var AnotherApiComponent = $src.AnotherApi = function(parent, row) {
+		AnotherApiBaseComponent.apply(this, arguments)
+
+	}
+	var AnotherApiPrototype = AnotherApiComponent.prototype = Object.create(AnotherApiBasePrototype)
+
+	AnotherApiPrototype.constructor = AnotherApiComponent
+
+	AnotherApiPrototype.componentName = 'src.AnotherApi'
+
+	AnotherApiPrototype.$c = function($c) {
+		var $this = this;
+		AnotherApiBasePrototype.$c.call(this, $c.$b = { })
+var _this$child0 = new $controls$web$api.Method($this)
+		$c._this$child0 = _this$child0
+
+//creating component Method
+		_this$child0.$c($c.$c$_this$child0 = { })
+
+		$this.addChild(_this$child0)
+	}
+	AnotherApiPrototype.$s = function($c) {
+		var $this = this;
+	AnotherApiBasePrototype.$s.call(this, $c.$b); delete $c.$b
+//assigning baseUrl to ("https://ctx.playfamily.ru")
+			$this._removeUpdater('baseUrl'); $this.baseUrl = ("https://ctx.playfamily.ru");
+
+//setting up component Method
+			var _this$child0 = $c._this$child0
+			_this$child0.$s($c.$c$_this$child0)
+			delete $c.$c$_this$child0
+
+//assigning path to ("/screenapi/v1/noauth/collection/web/1?elementAlias=topfilms&elementType=COLLECTION&limit=16&offset=0&withInnerCollections=true")
+			_this$child0._removeUpdater('path'); _this$child0.path = ("/screenapi/v1/noauth/collection/web/1?elementAlias=topfilms&elementType=COLLECTION&limit=16&offset=0&withInnerCollections=true");
+//assigning name to ("getMain")
+			_this$child0._removeUpdater('name'); _this$child0.name = ("getMain");
+
+			_this$child0.completed()
 
 			$this.completed()
 }
