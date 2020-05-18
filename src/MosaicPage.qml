@@ -2,21 +2,16 @@ Activity {
 	anchors.fill: parent;
 	name: "mosaic";
 
-	Rectangle {
-		anchors.fill: parent;
-		color: "#000c";
-	}
-
 	Mosaic {
-		id: nowonTvGrid;
-		x: 40s;
-		y: 40s;
-		width: 1200s;
-		height: parent.height - y;
+		id: mosaicGrid;
+		x: 5%;
+		y: 5%;
+		width: 90%;
+		height: 95%;
 		animationDuration: 300;
 		keyProcessDelay: 300;
 
-		onCurrentIndexChanged: { embedVideo.hide() }
+		onSelectedIndexChanged: { embedVideo.hide() }
 
 		onBackPressed: { this.focusIndex(this.currentIndex) }
 
@@ -30,10 +25,10 @@ Activity {
 		focusIndex(idx): {
 			var row = this.model.get(idx)
 			var item = this.getItemPosition(idx)
-			var x = nowonTvGrid.x + item[0] - nowonTvGrid.contentX
-			var y = nowonTvGrid.y + item[1] - nowonTvGrid.contentY
-			embedVideo.width = 290
-			embedVideo.height = 170
+			var x = mosaicGrid.x + item[0] - mosaicGrid.contentX
+			var y = mosaicGrid.y + item[1] - mosaicGrid.contentY
+			embedVideo.width = mosaicGrid.cellWidth
+			embedVideo.height = mosaicGrid.cellHeight
 			embedVideo.showPlayerAt(x, y)
 			embedVideo.source = row.video
 		}
@@ -49,21 +44,45 @@ Activity {
 	}
 
 	init: {
-		api.getMain(
-			function(res) {
-				var result = []
-				for (var i in res[0].items) {
-					var row = res[0].items[i]
+		// api.getMain(
+		// 	function(res) {
+		// 		mosaicGrid.fill(res[0].items, function(row) {
+		// 			if (row.thumbnail.image_15x) {
+		// 				return {
+		// 					video: api.baseUrl + row.video_cover,
+		// 					preview: api.baseUrl + row.thumbnail.image_15x,
+		// 					title: row.title,
+		// 					icon: api.baseUrl + row.logotype.image_15x
+		// 				}
+		// 			} else {
+		// 				return null
+		// 			}
+		// 		})
+		// 	},
+		// 	function(e) { log("Failed to get content", e) }
+		// )
 
-					if (row.thumbnail.image_15x)
-					result.push({
-						video: api.baseUrl + row.video_cover,
-						preview: api.baseUrl + row.thumbnail.image_15x,
-						title: row.title,
-						icon: api.baseUrl + row.logotype.image_15x
-					})
-				}
-				nowonTvGrid.model.assign(result)
+		anotherApi.getMain(
+			function(res) {
+				mosaicGrid.fill(res.element.collectionItems.items, function(row) {
+					if (row.element.basicCovers.items && row.element.basicCovers.items.length > 0) {
+						var videoUrl = ""
+						var trailers = row.element.trailers.items
+						for (var i in trailers) {
+							if (trailers[i].media.mimeType.indexOf("mp4") >= 0) {
+								videoUrl = trailers[i].url
+								break
+							}
+						}
+						return {
+							video: videoUrl,
+							preview: row.element.basicCovers.items[0].url,
+							title: row.element.name
+						}
+					} else {
+						return null
+					}
+				})
 			},
 			function(e) { log("Failed to get content", e) }
 		)
