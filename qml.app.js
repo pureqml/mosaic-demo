@@ -3902,6 +3902,73 @@ var _this$child0 = new $core.PropertyStorage($this)
 }
 
 
+//=====[component core.MouseMoveMixin]=====================
+
+	var MouseMoveMixinBaseComponent = $core.Object
+	var MouseMoveMixinBasePrototype = MouseMoveMixinBaseComponent.prototype
+
+/**
+ * @constructor
+ * @extends {$core.Object}
+ */
+	var MouseMoveMixinComponent = $core.MouseMoveMixin = function(parent, row) {
+		MouseMoveMixinBaseComponent.apply(this, arguments)
+	//custom constructor:
+	{
+		this.element = this.parent.element;
+		this._bindMove(this.enabled)
+	}
+
+	}
+	var MouseMoveMixinPrototype = MouseMoveMixinComponent.prototype = Object.create(MouseMoveMixinBasePrototype)
+
+	MouseMoveMixinPrototype.constructor = MouseMoveMixinComponent
+
+	MouseMoveMixinPrototype.componentName = 'core.MouseMoveMixin'
+	MouseMoveMixinPrototype.mouseMove = $core.createSignal('mouseMove')
+	core.addProperty(MouseMoveMixinPrototype, 'bool', 'enabled', (true))
+	core.addProperty(MouseMoveMixinPrototype, 'int', 'mouseX')
+	core.addProperty(MouseMoveMixinPrototype, 'int', 'mouseY')
+	MouseMoveMixinPrototype._updatePosition = function(event) {
+		var parent = this.parent
+		var x = event.offsetX
+		var y = event.offsetY
+		if (x >= 0 && y >= 0 && x < parent.width && y < parent.height) {
+			this.mouseX = x
+			this.mouseY = y
+			this.mouseMove(x, y)
+			return true
+		}
+		else
+			return false
+	}
+	MouseMoveMixinPrototype._bindMove = function(value) {
+		if (value && !this._mouseMoveBinder) {
+			this._mouseMoveBinder = new $core.EventBinder(this.element)
+			this._mouseMoveBinder.on('mousemove', function(event) {
+				if (!this._updatePosition(event))
+					event.preventDefault()
+			}.bind(this))
+		}
+		if (this._mouseMoveBinder)
+			this._mouseMoveBinder.enable(value)
+	}
+	$core._protoOnChanged(MouseMoveMixinPrototype, 'enabled', function(value) {
+		this._bindMove(value)
+	})
+
+	MouseMoveMixinPrototype.$c = function($c) {
+		var $this = this;
+		MouseMoveMixinBasePrototype.$c.call(this, $c.$b = { })
+
+	}
+	MouseMoveMixinPrototype.$s = function($c) {
+		var $this = this;
+	MouseMoveMixinBasePrototype.$s.call(this, $c.$b); delete $c.$b
+$this.completed()
+}
+
+
 //=====[component controls.web.api.Method]=====================
 
 	var MethodBaseComponent = $core.Object
@@ -4883,75 +4950,82 @@ $this.delegate = (function(__parent, __row) {
 			delegate.$c($c.$c$delegate = { })
 			delegate.pressed = $core.createSignal('pressed').bind(delegate)
 	core.addProperty(delegate, 'bool', 'active')
-			var delegate$child0 = new $core.Image(delegate)
+			var delegate$child0 = new $core.MouseMoveMixin(delegate)
 			$c.delegate$child0 = delegate$child0
 
-//creating component Image
+//creating component MouseMoveMixin
 			delegate$child0.$c($c.$c$delegate$child0 = { })
-	core.addProperty(delegate$child0, 'bool', 'display')
-			delegate$child0._setId('programImage')
+
 			delegate.addChild(delegate$child0)
-			var delegate$child1 = new $core.Rectangle(delegate)
+			var delegate$child1 = new $core.Image(delegate)
 			$c.delegate$child1 = delegate$child1
 
-//creating component Rectangle
+//creating component Image
 			delegate$child1.$c($c.$c$delegate$child1 = { })
-//creating component controls.experimental.<anonymous>
-			var delegate_child1$gradient = new $core.Gradient(delegate$child1)
-			$c.delegate_child1$gradient = delegate_child1$gradient
-
-//creating component Gradient
-			delegate_child1$gradient.$c($c.$c$delegate_child1$gradient = { })
-			var delegate_child1_gradient$child0 = new $core.GradientStop(delegate_child1$gradient)
-			$c.delegate_child1_gradient$child0 = delegate_child1_gradient$child0
-
-//creating component GradientStop
-			delegate_child1_gradient$child0.$c($c.$c$delegate_child1_gradient$child0 = { })
-
-			delegate_child1$gradient.addChild(delegate_child1_gradient$child0)
-			var delegate_child1_gradient$child1 = new $core.GradientStop(delegate_child1$gradient)
-			$c.delegate_child1_gradient$child1 = delegate_child1_gradient$child1
-
-//creating component GradientStop
-			delegate_child1_gradient$child1.$c($c.$c$delegate_child1_gradient$child1 = { })
-
-			delegate_child1$gradient.addChild(delegate_child1_gradient$child1)
-			delegate$child1.gradient = delegate_child1$gradient
+	core.addProperty(delegate$child1, 'bool', 'display')
+			delegate$child1._setId('programImage')
 			delegate.addChild(delegate$child1)
-			var delegate$child2 = new $core.Image(delegate)
+			var delegate$child2 = new $core.Rectangle(delegate)
 			$c.delegate$child2 = delegate$child2
 
-//creating component Image
+//creating component Rectangle
 			delegate$child2.$c($c.$c$delegate$child2 = { })
+//creating component controls.experimental.<anonymous>
+			var delegate_child2$gradient = new $core.Gradient(delegate$child2)
+			$c.delegate_child2$gradient = delegate_child2$gradient
 
+//creating component Gradient
+			delegate_child2$gradient.$c($c.$c$delegate_child2$gradient = { })
+			var delegate_child2_gradient$child0 = new $core.GradientStop(delegate_child2$gradient)
+			$c.delegate_child2_gradient$child0 = delegate_child2_gradient$child0
+
+//creating component GradientStop
+			delegate_child2_gradient$child0.$c($c.$c$delegate_child2_gradient$child0 = { })
+
+			delegate_child2$gradient.addChild(delegate_child2_gradient$child0)
+			var delegate_child2_gradient$child1 = new $core.GradientStop(delegate_child2$gradient)
+			$c.delegate_child2_gradient$child1 = delegate_child2_gradient$child1
+
+//creating component GradientStop
+			delegate_child2_gradient$child1.$c($c.$c$delegate_child2_gradient$child1 = { })
+
+			delegate_child2$gradient.addChild(delegate_child2_gradient$child1)
+			delegate$child2.gradient = delegate_child2$gradient
 			delegate.addChild(delegate$child2)
-			var delegate$child3 = new $controls$web.EllipsisText(delegate)
+			var delegate$child3 = new $core.Image(delegate)
 			$c.delegate$child3 = delegate$child3
 
-//creating component EllipsisText
+//creating component Image
 			delegate$child3.$c($c.$c$delegate$child3 = { })
 
 			delegate.addChild(delegate$child3)
-			var delegate$child4 = new $core.Rectangle(delegate)
+			var delegate$child4 = new $controls$web.EllipsisText(delegate)
 			$c.delegate$child4 = delegate$child4
 
-//creating component Rectangle
+//creating component EllipsisText
 			delegate$child4.$c($c.$c$delegate$child4 = { })
-			var delegate_child4$child0 = new $core.Rectangle(delegate$child4)
-			$c.delegate_child4$child0 = delegate_child4$child0
 
-//creating component Rectangle
-			delegate_child4$child0.$c($c.$c$delegate_child4$child0 = { })
-
-			delegate$child4.addChild(delegate_child4$child0)
 			delegate.addChild(delegate$child4)
-			var delegate$child5 = new $core.Timer(delegate)
+			var delegate$child5 = new $core.Rectangle(delegate)
 			$c.delegate$child5 = delegate$child5
 
-//creating component Timer
+//creating component Rectangle
 			delegate$child5.$c($c.$c$delegate$child5 = { })
-			delegate$child5._setId('flipTimer')
+			var delegate_child5$child0 = new $core.Rectangle(delegate$child5)
+			$c.delegate_child5$child0 = delegate_child5$child0
+
+//creating component Rectangle
+			delegate_child5$child0.$c($c.$c$delegate_child5$child0 = { })
+
+			delegate$child5.addChild(delegate_child5$child0)
 			delegate.addChild(delegate$child5)
+			var delegate$child6 = new $core.Timer(delegate)
+			$c.delegate$child6 = delegate$child6
+
+//creating component Timer
+			delegate$child6.$c($c.$c$delegate$child6 = { })
+			delegate$child6._setId('flipTimer')
+			delegate.addChild(delegate$child6)
 
 //setting up component WebItem
 			var delegate = $c.delegate
@@ -4994,180 +5068,186 @@ $this.delegate = (function(__parent, __row) {
 
 			flipTimer.restart()
 		}.bind(delegate))
-			delegate.onChanged('hover', function(value) {
-	var model = this._get('model', true)
-
-			if (value) {
-				this.parent.hoverMode = true
-				this.parent.currentIndex = model.index
-			}
-		}.bind(delegate))
 			delegate.onPressed('Select', function(key,event) { this.pressed() }.bind(delegate))
 
-//setting up component Image
+//setting up component MouseMoveMixin
 			var delegate$child0 = $c.delegate$child0
 			delegate$child0.$s($c.$c$delegate$child0)
 			delete $c.$c$delegate$child0
 
-//assigning source to (${model.preview})
-			delegate$child0._replaceUpdater('source', function() { delegate$child0.source = (delegate$child0._get('model').preview) }, [delegate$child0._get('_delegate'),'_row'])
-//assigning fillMode to (_globals.core.Image.prototype.PreserveAspectCrop)
-			delegate$child0._removeUpdater('fillMode'); delegate$child0.fillMode = (_globals.core.Image.prototype.PreserveAspectCrop);
-//assigning visible to (${source})
-			delegate$child0._replaceUpdater('visible', function() { delegate$child0.visible = (delegate$child0.source) }, [delegate$child0,'source'])
-//assigning anchors.fill to (${parent})
-			delegate$child0.anchors._removeUpdater('fill'); delegate$child0.anchors.fill = (delegate$child0.parent);
-			delegate$child0.onChanged('status', function(value) {
-				this.display = this.status == this.Ready
+			delegate$child0.on('mouseMove', function() {
+	var model = this._get('model', true), nowonTvGrid = this._get('nowonTvGrid', true)
+
+				nowonTvGrid.hoverMode = true
+				nowonTvGrid.currentIndex = model.index
 			}.bind(delegate$child0))
 
 			delegate$child0.completed()
 
-//setting up component Rectangle
+//setting up component Image
 			var delegate$child1 = $c.delegate$child1
 			delegate$child1.$s($c.$c$delegate$child1)
 			delete $c.$c$delegate$child1
 
-//assigning anchors.bottomMargin to (((2) * ${context.virtualScale}))
-			delegate$child1.anchors._replaceUpdater('bottomMargin', function() { delegate$child1.anchors.bottomMargin = (((2) * delegate$child1._context.virtualScale)) }, [delegate$child1._context,'virtualScale'])
-//assigning width to ((${parent.width}))
-			delegate$child1._replaceUpdater('width', function() { delegate$child1.width = ((delegate$child1.parent.width)) }, [delegate$child1.parent,'width'])
-
-//setting up component Gradient
-			var delegate_child1$gradient = $c.delegate_child1$gradient
-			delegate_child1$gradient.$s($c.$c$delegate_child1$gradient)
-			delete $c.$c$delegate_child1$gradient
-
-
-//setting up component GradientStop
-			var delegate_child1_gradient$child0 = $c.delegate_child1_gradient$child0
-			delegate_child1_gradient$child0.$s($c.$c$delegate_child1_gradient$child0)
-			delete $c.$c$delegate_child1_gradient$child0
-
-//assigning color to ("#0000")
-			delegate_child1_gradient$child0._removeUpdater('color'); delegate_child1_gradient$child0.color = ("#0000");
-//assigning position to (0.0)
-			delegate_child1_gradient$child0._removeUpdater('position'); delegate_child1_gradient$child0.position = (0.0);
-
-			delegate_child1_gradient$child0.completed()
-
-//setting up component GradientStop
-			var delegate_child1_gradient$child1 = $c.delegate_child1_gradient$child1
-			delegate_child1_gradient$child1.$s($c.$c$delegate_child1_gradient$child1)
-			delete $c.$c$delegate_child1_gradient$child1
-
-//assigning color to ("#000")
-			delegate_child1_gradient$child1._removeUpdater('color'); delegate_child1_gradient$child1.color = ("#000");
-//assigning position to (1.0)
-			delegate_child1_gradient$child1._removeUpdater('position'); delegate_child1_gradient$child1.position = (1.0);
-
-			delegate_child1_gradient$child1.completed()
-
-			delegate_child1$gradient.completed()
-//assigning anchors.bottom to (${parent.bottom})
-			delegate$child1.anchors._replaceUpdater('bottom', function() { delegate$child1.anchors.bottom = (delegate$child1.parent.bottom) }, [delegate$child1.parent,'bottom'])
-//assigning height to (((70) * ${context.virtualScale}))
-			delegate$child1._replaceUpdater('height', function() { delegate$child1.height = (((70) * delegate$child1._context.virtualScale)) }, [delegate$child1._context,'virtualScale'])
+//assigning source to (${model.preview})
+			delegate$child1._replaceUpdater('source', function() { delegate$child1.source = (delegate$child1._get('model').preview) }, [delegate$child1._get('_delegate'),'_row'])
+//assigning fillMode to (_globals.core.Image.prototype.PreserveAspectCrop)
+			delegate$child1._removeUpdater('fillMode'); delegate$child1.fillMode = (_globals.core.Image.prototype.PreserveAspectCrop);
+//assigning visible to (${source})
+			delegate$child1._replaceUpdater('visible', function() { delegate$child1.visible = (delegate$child1.source) }, [delegate$child1,'source'])
+//assigning anchors.fill to (${parent})
+			delegate$child1.anchors._removeUpdater('fill'); delegate$child1.anchors.fill = (delegate$child1.parent);
+			delegate$child1.onChanged('status', function(value) {
+				this.display = this.status == this.Ready
+			}.bind(delegate$child1))
 
 			delegate$child1.completed()
 
-//setting up component Image
+//setting up component Rectangle
 			var delegate$child2 = $c.delegate$child2
 			delegate$child2.$s($c.$c$delegate$child2)
 			delete $c.$c$delegate$child2
 
-//assigning horizontalAlignment to (_globals.core.Image.prototype.AlignRight)
-			delegate$child2._removeUpdater('horizontalAlignment'); delegate$child2.horizontalAlignment = (_globals.core.Image.prototype.AlignRight);
-//assigning source to (${model.icon})
-			delegate$child2._replaceUpdater('source', function() { delegate$child2.source = (delegate$child2._get('model').icon) }, [delegate$child2._get('_delegate'),'_row'])
-//assigning anchors.bottomMargin to (((21) * ${context.virtualScale}))
-			delegate$child2.anchors._replaceUpdater('bottomMargin', function() { delegate$child2.anchors.bottomMargin = (((21) * delegate$child2._context.virtualScale)) }, [delegate$child2._context,'virtualScale'])
-//assigning height to (((70) * ${context.virtualScale}))
-			delegate$child2._replaceUpdater('height', function() { delegate$child2.height = (((70) * delegate$child2._context.virtualScale)) }, [delegate$child2._context,'virtualScale'])
-//assigning width to (((100) * ${context.virtualScale}))
-			delegate$child2._replaceUpdater('width', function() { delegate$child2.width = (((100) * delegate$child2._context.virtualScale)) }, [delegate$child2._context,'virtualScale'])
-//assigning fillMode to (_globals.core.Image.prototype.PreserveAspectFit)
-			delegate$child2._removeUpdater('fillMode'); delegate$child2.fillMode = (_globals.core.Image.prototype.PreserveAspectFit);
-//assigning verticalAlignment to (_globals.core.Image.prototype.AlignTop)
-			delegate$child2._removeUpdater('verticalAlignment'); delegate$child2.verticalAlignment = (_globals.core.Image.prototype.AlignTop);
+//assigning anchors.bottomMargin to (((2) * ${context.virtualScale}))
+			delegate$child2.anchors._replaceUpdater('bottomMargin', function() { delegate$child2.anchors.bottomMargin = (((2) * delegate$child2._context.virtualScale)) }, [delegate$child2._context,'virtualScale'])
+//assigning width to ((${parent.width}))
+			delegate$child2._replaceUpdater('width', function() { delegate$child2.width = ((delegate$child2.parent.width)) }, [delegate$child2.parent,'width'])
+
+//setting up component Gradient
+			var delegate_child2$gradient = $c.delegate_child2$gradient
+			delegate_child2$gradient.$s($c.$c$delegate_child2$gradient)
+			delete $c.$c$delegate_child2$gradient
+
+
+//setting up component GradientStop
+			var delegate_child2_gradient$child0 = $c.delegate_child2_gradient$child0
+			delegate_child2_gradient$child0.$s($c.$c$delegate_child2_gradient$child0)
+			delete $c.$c$delegate_child2_gradient$child0
+
+//assigning color to ("#0000")
+			delegate_child2_gradient$child0._removeUpdater('color'); delegate_child2_gradient$child0.color = ("#0000");
+//assigning position to (0.0)
+			delegate_child2_gradient$child0._removeUpdater('position'); delegate_child2_gradient$child0.position = (0.0);
+
+			delegate_child2_gradient$child0.completed()
+
+//setting up component GradientStop
+			var delegate_child2_gradient$child1 = $c.delegate_child2_gradient$child1
+			delegate_child2_gradient$child1.$s($c.$c$delegate_child2_gradient$child1)
+			delete $c.$c$delegate_child2_gradient$child1
+
+//assigning color to ("#000")
+			delegate_child2_gradient$child1._removeUpdater('color'); delegate_child2_gradient$child1.color = ("#000");
+//assigning position to (1.0)
+			delegate_child2_gradient$child1._removeUpdater('position'); delegate_child2_gradient$child1.position = (1.0);
+
+			delegate_child2_gradient$child1.completed()
+
+			delegate_child2$gradient.completed()
 //assigning anchors.bottom to (${parent.bottom})
 			delegate$child2.anchors._replaceUpdater('bottom', function() { delegate$child2.anchors.bottom = (delegate$child2.parent.bottom) }, [delegate$child2.parent,'bottom'])
-//assigning x to (((10) * ${context.virtualScale}))
-			delegate$child2._replaceUpdater('x', function() { delegate$child2.x = (((10) * delegate$child2._context.virtualScale)) }, [delegate$child2._context,'virtualScale'])
+//assigning height to (((70) * ${context.virtualScale}))
+			delegate$child2._replaceUpdater('height', function() { delegate$child2.height = (((70) * delegate$child2._context.virtualScale)) }, [delegate$child2._context,'virtualScale'])
 
 			delegate$child2.completed()
 
-//setting up component EllipsisText
+//setting up component Image
 			var delegate$child3 = $c.delegate$child3
 			delegate$child3.$s($c.$c$delegate$child3)
 			delete $c.$c$delegate$child3
 
-//assigning color to ("#fff")
-			delegate$child3._removeUpdater('color'); delegate$child3.color = ("#fff");
-//assigning text to (${model.title})
-			delegate$child3._replaceUpdater('text', function() { delegate$child3.text = (delegate$child3._get('model').title) }, [delegate$child3._get('_delegate'),'_row'])
-//assigning anchors.bottomMargin to (((6) * ${context.virtualScale}))
-			delegate$child3.anchors._replaceUpdater('bottomMargin', function() { delegate$child3.anchors.bottomMargin = (((6) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
-//assigning width to (((270) * ${context.virtualScale}))
-			delegate$child3._replaceUpdater('width', function() { delegate$child3.width = (((270) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
+//assigning horizontalAlignment to (_globals.core.Image.prototype.AlignRight)
+			delegate$child3._removeUpdater('horizontalAlignment'); delegate$child3.horizontalAlignment = (_globals.core.Image.prototype.AlignRight);
+//assigning source to (${model.icon})
+			delegate$child3._replaceUpdater('source', function() { delegate$child3.source = (delegate$child3._get('model').icon) }, [delegate$child3._get('_delegate'),'_row'])
+//assigning anchors.bottomMargin to (((21) * ${context.virtualScale}))
+			delegate$child3.anchors._replaceUpdater('bottomMargin', function() { delegate$child3.anchors.bottomMargin = (((21) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
+//assigning height to (((70) * ${context.virtualScale}))
+			delegate$child3._replaceUpdater('height', function() { delegate$child3.height = (((70) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
+//assigning width to (((100) * ${context.virtualScale}))
+			delegate$child3._replaceUpdater('width', function() { delegate$child3.width = (((100) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
+//assigning fillMode to (_globals.core.Image.prototype.PreserveAspectFit)
+			delegate$child3._removeUpdater('fillMode'); delegate$child3.fillMode = (_globals.core.Image.prototype.PreserveAspectFit);
+//assigning verticalAlignment to (_globals.core.Image.prototype.AlignTop)
+			delegate$child3._removeUpdater('verticalAlignment'); delegate$child3.verticalAlignment = (_globals.core.Image.prototype.AlignTop);
 //assigning anchors.bottom to (${parent.bottom})
 			delegate$child3.anchors._replaceUpdater('bottom', function() { delegate$child3.anchors.bottom = (delegate$child3.parent.bottom) }, [delegate$child3.parent,'bottom'])
-//assigning font.pixelSize to (((18) * ${context.virtualScale}))
-			delegate$child3.font._replaceUpdater('pixelSize', function() { delegate$child3.font.pixelSize = (((18) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
 //assigning x to (((10) * ${context.virtualScale}))
 			delegate$child3._replaceUpdater('x', function() { delegate$child3.x = (((10) * delegate$child3._context.virtualScale)) }, [delegate$child3._context,'virtualScale'])
 
 			delegate$child3.completed()
 
-//setting up component Rectangle
+//setting up component EllipsisText
 			var delegate$child4 = $c.delegate$child4
 			delegate$child4.$s($c.$c$delegate$child4)
 			delete $c.$c$delegate$child4
 
-//assigning color to ("#000c")
-			delegate$child4._removeUpdater('color'); delegate$child4.color = ("#000c");
-//assigning width to ((${parent.width}))
-			delegate$child4._replaceUpdater('width', function() { delegate$child4.width = ((delegate$child4.parent.width)) }, [delegate$child4.parent,'width'])
+//assigning color to ("#fff")
+			delegate$child4._removeUpdater('color'); delegate$child4.color = ("#fff");
+//assigning text to (${model.title})
+			delegate$child4._replaceUpdater('text', function() { delegate$child4.text = (delegate$child4._get('model').title) }, [delegate$child4._get('_delegate'),'_row'])
+//assigning anchors.bottomMargin to (((6) * ${context.virtualScale}))
+			delegate$child4.anchors._replaceUpdater('bottomMargin', function() { delegate$child4.anchors.bottomMargin = (((6) * delegate$child4._context.virtualScale)) }, [delegate$child4._context,'virtualScale'])
+//assigning width to (((270) * ${context.virtualScale}))
+			delegate$child4._replaceUpdater('width', function() { delegate$child4.width = (((270) * delegate$child4._context.virtualScale)) }, [delegate$child4._context,'virtualScale'])
 //assigning anchors.bottom to (${parent.bottom})
 			delegate$child4.anchors._replaceUpdater('bottom', function() { delegate$child4.anchors.bottom = (delegate$child4.parent.bottom) }, [delegate$child4.parent,'bottom'])
-//assigning clip to (true)
-			delegate$child4._removeUpdater('clip'); delegate$child4.clip = (true);
-//assigning height to (((2) * ${context.virtualScale}))
-			delegate$child4._replaceUpdater('height', function() { delegate$child4.height = (((2) * delegate$child4._context.virtualScale)) }, [delegate$child4._context,'virtualScale'])
-
-//setting up component Rectangle
-			var delegate_child4$child0 = $c.delegate_child4$child0
-			delegate_child4$child0.$s($c.$c$delegate_child4$child0)
-			delete $c.$c$delegate_child4$child0
-
-//assigning color to ("#e53935")
-			delegate_child4$child0._removeUpdater('color'); delegate_child4$child0.color = ("#e53935");
-//assigning width to (${parent.width} * ${model.progress})
-			delegate_child4$child0._replaceUpdater('width', function() { delegate_child4$child0.width = (delegate_child4$child0.parent.width * delegate_child4$child0._get('model').progress) }, [delegate_child4$child0._get('_delegate'),'_row',delegate_child4$child0.parent,'width'])
-//assigning height to ((${parent.height}))
-			delegate_child4$child0._replaceUpdater('height', function() { delegate_child4$child0.height = ((delegate_child4$child0.parent.height)) }, [delegate_child4$child0.parent,'height'])
-
-			delegate_child4$child0.completed()
+//assigning font.pixelSize to (((18) * ${context.virtualScale}))
+			delegate$child4.font._replaceUpdater('pixelSize', function() { delegate$child4.font.pixelSize = (((18) * delegate$child4._context.virtualScale)) }, [delegate$child4._context,'virtualScale'])
+//assigning x to (((10) * ${context.virtualScale}))
+			delegate$child4._replaceUpdater('x', function() { delegate$child4.x = (((10) * delegate$child4._context.virtualScale)) }, [delegate$child4._context,'virtualScale'])
 
 			delegate$child4.completed()
 
-//setting up component Timer
+//setting up component Rectangle
 			var delegate$child5 = $c.delegate$child5
 			delegate$child5.$s($c.$c$delegate$child5)
 			delete $c.$c$delegate$child5
 
+//assigning color to ("#000c")
+			delegate$child5._removeUpdater('color'); delegate$child5.color = ("#000c");
+//assigning width to ((${parent.width}))
+			delegate$child5._replaceUpdater('width', function() { delegate$child5.width = ((delegate$child5.parent.width)) }, [delegate$child5.parent,'width'])
+//assigning anchors.bottom to (${parent.bottom})
+			delegate$child5.anchors._replaceUpdater('bottom', function() { delegate$child5.anchors.bottom = (delegate$child5.parent.bottom) }, [delegate$child5.parent,'bottom'])
+//assigning clip to (true)
+			delegate$child5._removeUpdater('clip'); delegate$child5.clip = (true);
+//assigning height to (((2) * ${context.virtualScale}))
+			delegate$child5._replaceUpdater('height', function() { delegate$child5.height = (((2) * delegate$child5._context.virtualScale)) }, [delegate$child5._context,'virtualScale'])
+
+//setting up component Rectangle
+			var delegate_child5$child0 = $c.delegate_child5$child0
+			delegate_child5$child0.$s($c.$c$delegate_child5$child0)
+			delete $c.$c$delegate_child5$child0
+
+//assigning color to ("#e53935")
+			delegate_child5$child0._removeUpdater('color'); delegate_child5$child0.color = ("#e53935");
+//assigning width to (${parent.width} * ${model.progress})
+			delegate_child5$child0._replaceUpdater('width', function() { delegate_child5$child0.width = (delegate_child5$child0.parent.width * delegate_child5$child0._get('model').progress) }, [delegate_child5$child0._get('_delegate'),'_row',delegate_child5$child0.parent,'width'])
+//assigning height to ((${parent.height}))
+			delegate_child5$child0._replaceUpdater('height', function() { delegate_child5$child0.height = ((delegate_child5$child0.parent.height)) }, [delegate_child5$child0.parent,'height'])
+
+			delegate_child5$child0.completed()
+
+			delegate$child5.completed()
+
+//setting up component Timer
+			var delegate$child6 = $c.delegate$child6
+			delegate$child6.$s($c.$c$delegate$child6)
+			delete $c.$c$delegate$child6
+
 //assigning interval to (3000)
-			delegate$child5._removeUpdater('interval'); delegate$child5.interval = (3000);
-			delegate$child5.on('triggered', function() {
+			delegate$child6._removeUpdater('interval'); delegate$child6.interval = (3000);
+			delegate$child6.on('triggered', function() {
 	var model = this._get('model', true), nowonTvGrid = this._get('nowonTvGrid', true)
 
 				if (!this.parent.active)
 					return
 				this.parent.transform.scaleX = 0
 				nowonTvGrid.itemFocused(model.index)
-			}.bind(delegate$child5))
+			}.bind(delegate$child6))
 
-			delegate$child5.completed()
+			delegate$child6.completed()
 	var behavior_delegate_on_transform = new $core.Animation(delegate)
 	var behavior_delegate_on_transform$c = { behavior_delegate_on_transform: behavior_delegate_on_transform }
 
@@ -5661,6 +5741,13 @@ var _this$child0 = new $controls$experimental.Mosaic($this)
 
 //creating component NestedVideo
 		_this$child1.$c($c.$c$_this$child1 = { })
+		var _this_child1$child0 = new $core.ClickMixin(_this$child1)
+		$c._this_child1$child0 = _this_child1$child0
+
+//creating component ClickMixin
+		_this_child1$child0.$c($c.$c$_this_child1$child0 = { })
+
+		_this$child1.addChild(_this_child1$child0)
 		_this$child1._setId('embedVideo')
 		$this.addChild(_this$child1)
 	}
@@ -5724,6 +5811,17 @@ var _this$child0 = new $controls$experimental.Mosaic($this)
 
 //assigning loop to (true)
 			_this$child1._removeUpdater('loop'); _this$child1.loop = (true);
+			_this$child1.on('clicked', function() {
+	var mosaicGrid = this._get('mosaicGrid', true)
+ mosaicGrid.play(mosaicGrid.currentIndex) }.bind(_this$child1))
+
+//setting up component ClickMixin
+			var _this_child1$child0 = $c._this_child1$child0
+			_this_child1$child0.$s($c.$c$_this_child1$child0)
+			delete $c.$c$_this_child1$child0
+
+
+			_this_child1$child0.completed()
 	var behavior__this_child1_on_y = new $core.Animation(_this$child1)
 	var behavior__this_child1_on_y$c = { behavior__this_child1_on_y: behavior__this_child1_on_y }
 
@@ -7104,6 +7202,52 @@ this._updateStyle()
 	GradientPrototype.$s = function($c) {
 		var $this = this;
 	GradientBasePrototype.$s.call(this, $c.$b); delete $c.$b
+$this.completed()
+}
+
+
+//=====[component core.ClickMixin]=====================
+
+	var ClickMixinBaseComponent = $core.Object
+	var ClickMixinBasePrototype = ClickMixinBaseComponent.prototype
+
+/**
+ * @constructor
+ * @extends {$core.Object}
+ */
+	var ClickMixinComponent = $core.ClickMixin = function(parent, row) {
+		ClickMixinBaseComponent.apply(this, arguments)
+	//custom constructor:
+	{
+		this.element = this.parent.element;
+		this._bindClick(this.enabled)
+	}
+
+	}
+	var ClickMixinPrototype = ClickMixinComponent.prototype = Object.create(ClickMixinBasePrototype)
+
+	ClickMixinPrototype.constructor = ClickMixinComponent
+
+	ClickMixinPrototype.componentName = 'core.ClickMixin'
+	core.addProperty(ClickMixinPrototype, 'bool', 'enabled', (true))
+	ClickMixinPrototype._bindClick = function(value) {
+		if (value && !this._cmClickBinder) {
+			this._cmClickBinder = new $core.EventBinder(this.element)
+			this._cmClickBinder.on('click', $core.createSignalForwarder(this.parent, 'clicked').bind(this))
+		}
+		if (this._cmClickBinder)
+			this._cmClickBinder.enable(value)
+	}
+	$core._protoOnChanged(ClickMixinPrototype, 'enabled', function(value) { this._bindClick(value) })
+
+	ClickMixinPrototype.$c = function($c) {
+		var $this = this;
+		ClickMixinBasePrototype.$c.call(this, $c.$b = { })
+
+	}
+	ClickMixinPrototype.$s = function($c) {
+		var $this = this;
+	ClickMixinBasePrototype.$s.call(this, $c.$b); delete $c.$b
 $this.completed()
 }
 
