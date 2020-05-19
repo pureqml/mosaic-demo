@@ -11,7 +11,7 @@ Activity {
 		animationDuration: 300;
 		keyProcessDelay: 300;
 
-		onSelectedIndexChanged: { embedVideo.hide() }
+		onCurrentIndexChanged: { embedVideo.hide() }
 
 		onBackPressed: { this.focusIndex(this.currentIndex) }
 
@@ -39,6 +39,10 @@ Activity {
 	NestedVideo {
 		id: embedVideo;
 		loop: true;
+
+		ClickMixin { }
+
+		onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
 
 		Behavior on x, y, width, height { Animation { duration: 300; } }
 	}
