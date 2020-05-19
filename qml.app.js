@@ -4857,7 +4857,7 @@ $this.completed()
 	MosaicPrototype.componentName = 'controls.experimental.Mosaic'
 	MosaicPrototype.play = $core.createSignal('play')
 	MosaicPrototype.itemFocused = $core.createSignal('itemFocused')
-	core.addProperty(MosaicPrototype, 'int', 'selectedIndex')
+	core.addProperty(MosaicPrototype, 'bool', 'hoverMode')
 	MosaicPrototype.fill = function(items,mappingFunc) {
 		var res = []
 		for (var i in items) {
@@ -4867,7 +4867,10 @@ $this.completed()
 		}
 		this.model.assign(res)
 	}
-	$core._protoOnChanged(MosaicPrototype, 'currentIndex', function(value) { this.selectedIndex = value })
+	$core._protoOnKey(MosaicPrototype, 'Key', function(key,event) {
+		this.hoverMode = false
+		return false
+	})
 
 	MosaicPrototype.$c = function($c) {
 		var $this = this;
@@ -4955,6 +4958,8 @@ $this.delegate = (function(__parent, __row) {
 			delegate.$s($c.$c$delegate)
 			delete $c.$c$delegate
 
+//assigning clip to (true)
+			delegate._removeUpdater('clip'); delegate.clip = (true);
 //assigning color to ("#464646")
 			delegate._removeUpdater('color'); delegate.color = ("#464646");
 //assigning effects.shadow.blur to (10)
@@ -4963,10 +4968,12 @@ $this.delegate = (function(__parent, __row) {
 			delegate._replaceUpdater('height', function() { delegate.height = (delegate.parent.cellHeight - ((10) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale',delegate.parent,'cellHeight'])
 //assigning width to (${parent.cellWidth} - ((10) * ${context.virtualScale}))
 			delegate._replaceUpdater('width', function() { delegate.width = (delegate.parent.cellWidth - ((10) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale',delegate.parent,'cellWidth'])
+//assigning radius to (((5) * ${context.virtualScale}))
+			delegate._replaceUpdater('radius', function() { delegate.radius = (((5) * delegate._context.virtualScale)) }, [delegate._context,'virtualScale'])
 //assigning effects.shadow.color to (${active} ? "#00f" : "#0000")
 			delegate.effects.shadow._replaceUpdater('color', function() { delegate.effects.shadow.color = (delegate.active ? "#00f" : "#0000") }, [delegate,'active'])
-//assigning active to (${model.index} == ${parent.selectedIndex})
-			delegate._replaceUpdater('active', function() { delegate.active = (delegate._get('model').index == delegate.parent.selectedIndex) }, [delegate._get('_delegate'),'_rowIndex',delegate.parent,'selectedIndex'])
+//assigning active to (${model.index} == ${parent.currentIndex})
+			delegate._replaceUpdater('active', function() { delegate.active = (delegate._get('model').index == delegate.parent.currentIndex) }, [delegate._get('_delegate'),'_rowIndex',delegate.parent,'currentIndex'])
 //assigning effects.shadow.spread to (1)
 			delegate.effects.shadow._removeUpdater('spread'); delegate.effects.shadow.spread = (1);
 //assigning z to (${active} ? ${parent.z} + 1 : ${parent.z})
@@ -4989,7 +4996,12 @@ $this.delegate = (function(__parent, __row) {
 		}.bind(delegate))
 			delegate.onChanged('hover', function(value) {
 	var model = this._get('model', true)
- if (value) this.parent.selectedIndex = model.index }.bind(delegate))
+
+			if (value) {
+				this.parent.hoverMode = true
+				this.parent.currentIndex = model.index
+			}
+		}.bind(delegate))
 			delegate.onPressed('Select', function(key,event) { this.pressed() }.bind(delegate))
 
 //setting up component Image
@@ -5149,7 +5161,7 @@ $this.delegate = (function(__parent, __row) {
 			delegate$child5.on('triggered', function() {
 	var model = this._get('model', true), nowonTvGrid = this._get('nowonTvGrid', true)
 
-				if (!this.parent.activeFocus)
+				if (!this.parent.active)
 					return
 				this.parent.transform.scaleX = 0
 				nowonTvGrid.itemFocused(model.index)
@@ -5195,6 +5207,8 @@ $this.delegate = (function(__parent, __row) {
 			$this._replaceUpdater('cellWidth', function() { $this.cellWidth = ($this.width * 0.25) }, [$this,'width'])
 //assigning keyNavigationWraps to (false)
 			$this._removeUpdater('keyNavigationWraps'); $this.keyNavigationWraps = (false);
+//assigning contentFollowsCurrentItem to (! ${hoverMode})
+			$this._replaceUpdater('contentFollowsCurrentItem', function() { $this.contentFollowsCurrentItem = (! $this.hoverMode) }, [$this,'hoverMode'])
 //assigning height to ((${parent.height}))
 			$this._replaceUpdater('height', function() { $this.height = (($this.parent.height)) }, [$this.parent,'height'])
 //assigning width to ((${parent.width}))
@@ -5696,7 +5710,7 @@ var _this$child0 = new $controls$experimental.Mosaic($this)
 			embedVideo.height = root.height
 		}.bind(_this$child0))
 			_this$child0.on('itemFocused', function(idx) { this.focusIndex(idx) }.bind(_this$child0))
-			_this$child0.onChanged('selectedIndex', function(value) {
+			_this$child0.onChanged('currentIndex', function(value) {
 	var embedVideo = this._get('embedVideo', true)
  embedVideo.hide() }.bind(_this$child0))
 			_this$child0.onPressed('Back', function(key,event) { this.focusIndex(this.currentIndex) }.bind(_this$child0))
