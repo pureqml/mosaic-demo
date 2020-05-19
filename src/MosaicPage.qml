@@ -25,7 +25,7 @@ Activity {
 		focusIndex(idx): {
 			var row = this.model.get(idx)
 			var item = this.getItemPosition(idx)
-			var x = mosaicGrid.x + item[0] - mosaicGrid.contentX
+			var x = mosaicGrid.x + item[0] - mosaicGrid.contentX - this.x / 10
 			var y = mosaicGrid.y + item[1] - mosaicGrid.contentY
 			embedVideo.width = mosaicGrid.cellWidth
 			embedVideo.height = mosaicGrid.cellHeight
