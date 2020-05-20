@@ -5,6 +5,11 @@ ActivityManager {
 	anchors.fill: context;
 	clip: true;
 
+	Rectangle {
+		anchors.fill: parent;
+		color: "#424242";
+	}
+
 	AppApi { id: api; }
 	AnotherApi { id: anotherApi; }
 
@@ -12,7 +17,6 @@ ActivityManager {
 	LazyActivity { name: "mosaic"; component: "src.MosaicPage"; }
 
 	onCompleted: {
-		this._context.document.dom.body.style.backgroundColor = "#424242"
 		this.push("mosaic")
 	}
 }
