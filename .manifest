@@ -8,6 +8,7 @@
 			"site": "https://pureqml.com"
 		},
 		"title": "mosaic",
+		"domain": "com.pureqml.mosaicdemo",
 		"resolutionWidth": 1280,
 		"virtual.width": 1280,
 		"resolutionHeight": 720,
