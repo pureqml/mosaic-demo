@@ -38,7 +38,6 @@ Activity {
 
 	NestedVideo {
 		id: embedVideo;
-		loop: true;
 
 		ClickMixin { }
 
