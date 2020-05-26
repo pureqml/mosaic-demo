@@ -29,8 +29,7 @@ Activity {
 			var y = mosaicGrid.y + item[1] - mosaicGrid.contentY
 			embedVideo.width = item[2]
 			embedVideo.height = mosaicGrid.cellHeight
-			embedVideo.showPlayerAt(x, y)
-			embedVideo.source = row.video
+			embedVideo.showPlayerAt(x, y, row.video)
 		}
 
 		onItemFocused(idx): { this.focusIndex(idx) }
