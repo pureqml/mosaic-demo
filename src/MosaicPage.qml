@@ -1,6 +1,7 @@
 Activity {
 	anchors.fill: parent;
 	name: "mosaic";
+	property int delegateRadius: 10s;
 
 	Mosaic {
 		id: mosaicGrid;
@@ -10,6 +11,7 @@ Activity {
 		height: 95%;
 		animationDuration: 300;
 		keyProcessDelay: 300;
+		delegateRadius: parent.delegateRadius;
 
 		onCurrentIndexChanged: { embedVideo.hide() }
 
@@ -37,6 +39,7 @@ Activity {
 
 	NestedVideo {
 		id: embedVideo;
+		radius: parent.delegateRadius;
 
 		ClickMixin { }
 
