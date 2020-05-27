@@ -12,40 +12,27 @@ Activity {
 		animationDuration: 300;
 		keyProcessDelay: 300;
 		delegateRadius: parent.delegateRadius;
+		highlight: 	NestedVideo {
+			radius: parent.delegateRadius;
+			z: display ? 1 : 0;
 
-		onCurrentIndexChanged: { embedVideo.hide() }
+			ClickMixin { }
+
+			onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
+
+			Behavior on x, y, width, height { Animation { duration: 300; } }
+		}
+
+		onCurrentIndexChanged: { this.highlight.hide() }
 
 		onBackPressed: { this.focusIndex(this.currentIndex) }
 
-		onPlay(idx): {
-			embedVideo.x = 0
-			embedVideo.y = 0
-			embedVideo.width = root.width
-			embedVideo.height = root.height
-		}
-
 		focusIndex(idx): {
 			var row = this.model.get(idx)
-			var item = this.getItemPosition(idx)
-			var x = mosaicGrid.x + item[0] - mosaicGrid.contentX - 5 * this._context.virtualScale
-			var y = mosaicGrid.y + item[1] - mosaicGrid.contentY
-			embedVideo.width = item[2]
-			embedVideo.height = mosaicGrid.cellHeight
-			embedVideo.showPlayerAt(x, y, row.video)
+			this.highlight.showAndPlay(row.video)
 		}
 
 		onItemFocused(idx): { this.focusIndex(idx) }
-	}
-
-	NestedVideo {
-		id: embedVideo;
-		radius: parent.delegateRadius;
-
-		ClickMixin { }
-
-		onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
-
-		Behavior on x, y, width, height { Animation { duration: 300; } }
 	}
 
 	init: {
