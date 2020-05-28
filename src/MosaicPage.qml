@@ -1,38 +1,46 @@
 Activity {
+	id: mosaicPageProto;
 	anchors.fill: parent;
 	name: "mosaic";
 	property int delegateRadius: 10s;
 
-	Mosaic {
-		id: mosaicGrid;
-		x: 5%;
-		y: 5%;
-		width: 90%;
-		height: 95%;
-		animationDuration: 300;
-		keyProcessDelay: 300;
-		delegateRadius: parent.delegateRadius;
-		highlight: 	NestedVideo {
-			radius: parent.delegateRadius;
-			z: display ? 1 : 0;
+	Item {
+		width: 100%;
+		height: 100%;
 
-			ClickMixin { }
+		OverflowMixin { value: OverflowMixin.ScrollY; }
 
-			onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
+		Mosaic {
+			id: mosaicGrid;
+			y: 5%;
+			x: 5%;
+			width: 90%;
+			height: contentHeight;
+			animationDuration: 300;
+			keyProcessDelay: 300;
+			delegateRadius: mosaicPageProto.delegateRadius;
+			highlight: NestedVideo {
+				radius: parent.delegateRadius;
+				z: display ? 1 : 0;
 
-			Behavior on x, y, width, height { Animation { duration: 300; } }
+				ClickMixin { }
+
+				onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
+
+				Behavior on x, y, width, height { Animation { duration: 300; } }
+			}
+
+			onCurrentIndexChanged: { this.highlight.hide() }
+
+			onBackPressed: { this.focusIndex(this.currentIndex) }
+
+			focusIndex(idx): {
+				var row = this.model.get(idx)
+				this.highlight.showAndPlay(row.video)
+			}
+
+			onItemFocused(idx): { this.focusIndex(idx) }
 		}
-
-		onCurrentIndexChanged: { this.highlight.hide() }
-
-		onBackPressed: { this.focusIndex(this.currentIndex) }
-
-		focusIndex(idx): {
-			var row = this.model.get(idx)
-			this.highlight.showAndPlay(row.video)
-		}
-
-		onItemFocused(idx): { this.focusIndex(idx) }
 	}
 
 	init: {
