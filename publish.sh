@@ -9,5 +9,6 @@ cp -r build.web/qml.app.min.js .
 git add qml.app.min.js
 
 git commit -a -m "updated site"
+git pull
+git push
 git checkout master
-git push --all #a bit dangerous lol
