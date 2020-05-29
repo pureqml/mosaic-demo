@@ -32,7 +32,10 @@ Activity {
 
 			OverflowMixin { value: OverflowMixin.Visible; }
 
-			onPlay(idx): { Modernizr.prefixed('requestFullscreen', videoPlayer.element.dom)() }
+			onPlay(idx): {
+				if (videoPlayer.ready)
+					Modernizr.prefixed('requestFullscreen', videoPlayer.element.dom)()
+			}
 
 			onCurrentIndexChanged: { this.highlight.hide() }
 
