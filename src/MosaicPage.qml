@@ -1,7 +1,8 @@
 Activity {
+	id: mosaicPageProto;
+	property int delegateRadius: 10s;
 	anchors.fill: parent;
 	name: "mosaic";
-	property int delegateRadius: 10s;
 
 	Item {
 		width: 100%;
@@ -17,9 +18,8 @@ Activity {
 			height: contentHeight;
 			animationDuration: 300;
 			keyProcessDelay: 300;
-			delegateRadius: parent.delegateRadius;
-			nativeScrolling: false;
-			highlight: 	NestedVideo {
+			delegateRadius: mosaicPageProto.delegateRadius;
+			highlight: NestedVideo {
 				radius: parent.delegateRadius;
 				z: display ? 1 : 0;
 
@@ -28,6 +28,13 @@ Activity {
 				onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
 
 				Behavior on x, y, width, height { Animation { duration: 300; } }
+			}
+
+			OverflowMixin { value: OverflowMixin.Visible; }
+
+			onPlay(idx): {
+				if (videoPlayer.ready)
+					Modernizr.prefixed('requestFullscreen', videoPlayer.element.dom)()
 			}
 
 			onCurrentIndexChanged: { this.highlight.hide() }
