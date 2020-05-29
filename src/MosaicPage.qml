@@ -21,6 +21,11 @@ Activity {
 			delegateRadius: mosaicPageProto.delegateRadius;
 			highlight: NestedVideo {
 				radius: parent.delegateRadius;
+				effects.shadow.blur: 10;
+				effects.shadow.color: "#8AF";
+				effects.shadow.spread: 2;
+				border.width: 1;
+				border.color: "#8AF";
 				z: display ? 1 : 0;
 
 				ClickMixin { }
