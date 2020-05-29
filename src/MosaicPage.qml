@@ -19,6 +19,7 @@ Activity {
 			animationDuration: 300;
 			keyProcessDelay: 300;
 			delegateRadius: mosaicPageProto.delegateRadius;
+			spacing: 20s;
 			highlight: NestedVideo {
 				radius: parent.delegateRadius;
 				effects.shadow.blur: 10;
