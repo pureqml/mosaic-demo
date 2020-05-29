@@ -1,8 +1,8 @@
 Activity {
 	id: mosaicPageProto;
+	property int delegateRadius: 10s;
 	anchors.fill: parent;
 	name: "mosaic";
-	property int delegateRadius: 10s;
 
 	Item {
 		width: 100%;
@@ -29,6 +29,10 @@ Activity {
 
 				Behavior on x, y, width, height { Animation { duration: 300; } }
 			}
+
+			OverflowMixin { value: OverflowMixin.Visible; }
+
+			onPlay(idx): { Modernizr.prefixed('requestFullscreen', videoPlayer.element.dom)() }
 
 			onCurrentIndexChanged: { this.highlight.hide() }
 
