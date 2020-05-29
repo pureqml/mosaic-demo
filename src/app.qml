@@ -7,7 +7,7 @@ ActivityManager {
 
 	Rectangle {
 		anchors.fill: parent;
-		color: "#424242";
+		color: "#141414";
 	}
 
 	AppApi { id: api; }
