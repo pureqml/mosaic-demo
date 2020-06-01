@@ -40,7 +40,7 @@ Activity {
 
 			onPlay(idx): {
 				if (videoPlayer.ready)
-					Modernizr.prefixed('requestFullscreen', videoPlayer.element.dom)()
+					videoPlayer.fullscreen = true
 			}
 
 			onCurrentIndexChanged: { this.highlight.hide() }
