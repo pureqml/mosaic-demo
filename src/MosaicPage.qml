@@ -39,6 +39,7 @@ Activity {
 			OverflowMixin { value: OverflowMixin.Visible; }
 
 			onPlay(idx): {
+				this.focusIndex(idx)
 				if (videoPlayer.ready)
 					videoPlayer.fullscreen = true
 			}
