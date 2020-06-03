@@ -8,35 +8,18 @@ Activity {
 		width: 100%;
 		height: 100%;
 
-		OverflowMixin { value: OverflowMixin.ScrollY; }
+		//OverflowMixin { value: OverflowMixin.ScrollY; }
 
 		Mosaic {
 			id: mosaicGrid;
 			y: 5%;
 			x: 5%;
 			width: 90%;
-			height: contentHeight;
 			animationDuration: 300;
 			keyProcessDelay: 300;
 			delegateRadius: mosaicPageProto.delegateRadius;
 			spacing: 20s;
-			highlight: NestedVideo {
-				radius: parent.delegateRadius;
-				effects.shadow.blur: 10;
-				effects.shadow.color: "#8AF";
-				effects.shadow.spread: 2;
-				border.width: 1;
-				border.color: "#8AF";
-				z: display ? 1 : 0;
-
-				ClickMixin { }
-
-				onClicked: { mosaicGrid.play(mosaicGrid.currentIndex) }
-
-				Behavior on x, y, width, height { Animation { duration: 300; } }
-			}
-
-			OverflowMixin { value: OverflowMixin.Visible; }
+			highlight: MosaicHighlight { }
 
 			onPlay(idx): {
 				this.focusIndex(idx)
@@ -44,13 +27,13 @@ Activity {
 					videoPlayer.fullscreen = true
 			}
 
-			onCurrentIndexChanged: { this.highlight.hide() }
+			onCurrentIndexChanged: { highlightVideo.hide() }
 
 			onBackPressed: { this.focusIndex(this.currentIndex) }
 
 			focusIndex(idx): {
 				var row = this.model.get(idx)
-				this.highlight.showAndPlay(row.video)
+				highlightVideo.showAndPlay(row.video)
 			}
 
 			onItemFocused(idx): { this.focusIndex(idx) }
