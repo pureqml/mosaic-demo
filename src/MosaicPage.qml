@@ -11,7 +11,6 @@ Activity {
 		//OverflowMixin { value: OverflowMixin.ScrollY; }
 
 		Mosaic {
-			id: mosaicGrid;
 			y: 5%;
 			x: 5%;
 			width: 90%;
