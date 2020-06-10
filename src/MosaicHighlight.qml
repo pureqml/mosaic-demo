@@ -1,7 +1,5 @@
 NestedVideo {
     id: highlightVideo;
-    anchors.fill: parent;
-    anchors.margins: 20;
 
     radius: mosaicGrid.delegateRadius;
 
