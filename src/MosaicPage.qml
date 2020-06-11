@@ -18,6 +18,7 @@ Activity {
 			keyProcessDelay: 300;
 			delegateRadius: mosaicPageProto.delegateRadius;
 			spacing: 20s;
+			playing: videoPlayer.ready;
 			highlight: MosaicHighlight { }
 
 			onPlay(idx): {
