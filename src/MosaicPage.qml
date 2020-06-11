@@ -29,9 +29,8 @@ Activity {
 
 			onCurrentIndexChanged: { highlightVideo.hide() }
 
-			onBackPressed: { this.focusIndex(this.currentIndex) }
-
 			focusIndex(idx): {
+				videoPlayer.fullscreen = false
 				var row = this.model.get(idx)
 				highlightVideo.showAndPlay(row.video)
 			}
